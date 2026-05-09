@@ -1,7 +1,5 @@
 package TorneoMagic.model;
 
-package TorneoMagic.model;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
