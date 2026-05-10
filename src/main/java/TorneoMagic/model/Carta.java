@@ -7,34 +7,47 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "carta")
-
 public class Carta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_carta") 
+    @Column(name = "id_carta")
     private Long id;
 
     @NotBlank(message = "El nombre de la carta es obligatorio")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String nombre;
 
-    @OneToMany(mappedBy = "carta")
-    private List<CartaMazo> cartaMazos;
+    @Column(length = 255)
+    private String descripcion;
 
+    @Column(length = 50)
+    private String rareza;
+
+    @Min(value = 0, message = "El costo no puede ser negativo")
+    private Integer costo;
+
+    @OneToMany(mappedBy = "carta")
+    @ToString.Exclude
+    private List<CartaMazo> cartaMazos;
 }
+
+
 
 
