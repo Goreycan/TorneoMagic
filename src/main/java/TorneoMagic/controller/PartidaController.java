@@ -34,9 +34,7 @@ public class PartidaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Partida> buscarPorId(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<Partida> buscarPorId(@PathVariable Long id) {
         try {
             Partida partida =
                     partidaService.obtenerPorId(id);
@@ -52,9 +50,7 @@ public class PartidaController {
     }
 
     @PostMapping
-    public ResponseEntity<Partida> guardarPartida(
-            @Valid @RequestBody Partida partida
-    ) {
+    public ResponseEntity<Partida> guardarPartida(@Valid @RequestBody Partida partida) {
         try {
             Partida guardada =
                     partidaService
@@ -71,9 +67,7 @@ public class PartidaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarPartida(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<String> eliminarPartida(@PathVariable Long id) {
         try {
             partidaService.eliminarPartida(id);
             return new ResponseEntity<>(

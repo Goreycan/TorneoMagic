@@ -27,7 +27,6 @@ public class TorneoController {
                     HttpStatus.NO_CONTENT
             );
         }
-
         return new ResponseEntity<>(
                 torneos,
                 HttpStatus.OK
@@ -35,9 +34,7 @@ public class TorneoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Torneo> buscarPorId(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<Torneo> buscarPorId(@PathVariable Long id) {
         try {
             Torneo torneo =
                     torneoService.obtenerPorId(id);
@@ -53,9 +50,7 @@ public class TorneoController {
     }
 
     @PostMapping
-    public ResponseEntity<Torneo> guardarTorneo(
-            @Valid @RequestBody Torneo torneo
-    ) {
+    public ResponseEntity<Torneo> guardarTorneo(@Valid @RequestBody Torneo torneo) {
         try {
             Torneo guardado =
                     torneoService.guardarTorneo(torneo);
@@ -71,9 +66,7 @@ public class TorneoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarTorneo(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<String> eliminarTorneo(@PathVariable Long id) {
         try {
             torneoService.eliminarTorneo(id);
             return new ResponseEntity<>(

@@ -37,7 +37,7 @@ public class JugadorController {
     }
 
     @PostMapping
-    public ResponseEntity<Jugador> agregarJugador(@RequestBody Jugador jugador) {
+    public ResponseEntity<Jugador> agregarJugador(@Valid @RequestBody Jugador jugador) {
         try {
             Jugador guardado = jugadorService.guardar(jugador);
             return new ResponseEntity<>(guardado, HttpStatus.CREATED);

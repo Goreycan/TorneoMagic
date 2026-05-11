@@ -34,9 +34,7 @@ public class ResultadoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Resultado> buscarPorId(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<Resultado> buscarPorId(@PathVariable Long id) {
         try {
             Resultado resultado =
                     resultadoService.obtenerPorId(id);
@@ -51,9 +49,7 @@ public class ResultadoController {
         }
     }
     @PostMapping
-    public ResponseEntity<Resultado> guardarResultado(
-            @Valid @RequestBody Resultado resultado
-    ) {
+    public ResponseEntity<Resultado> guardarResultado(@Valid @RequestBody Resultado resultado) {
         try {
             Resultado guardado =
                     resultadoService
@@ -70,9 +66,7 @@ public class ResultadoController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<Resultado> registrarResultado(
-            @Valid @RequestBody Resultado resultado
-    ) {
+    public ResponseEntity<Resultado> registrarResultado(@Valid @RequestBody Resultado resultado) {
         try {
             Resultado registrado =
                     resultadoService
@@ -89,9 +83,7 @@ public class ResultadoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarResultado(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<String> eliminarResultado(@PathVariable Long id) {
         try {
             resultadoService.eliminarResultado(id);
             return new ResponseEntity<>(

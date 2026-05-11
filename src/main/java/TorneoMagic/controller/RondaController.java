@@ -34,9 +34,7 @@ public class RondaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ronda> buscarPorId(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<Ronda> buscarPorId(@PathVariable Long id) {
         try {
             Ronda ronda =
                     rondaService.obtenerPorId(id);
@@ -52,9 +50,7 @@ public class RondaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ronda> guardarRonda(
-            @Valid @RequestBody Ronda ronda
-    ) {
+    public ResponseEntity<Ronda> guardarRonda(@Valid @RequestBody Ronda ronda) {
         try {
             Ronda guardada =
                     rondaService.guardarRonda(ronda);
@@ -70,9 +66,7 @@ public class RondaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarRonda(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<String> eliminarRonda(@PathVariable Long id) {
         try {
             rondaService.eliminarRonda(id);
             return new ResponseEntity<>(

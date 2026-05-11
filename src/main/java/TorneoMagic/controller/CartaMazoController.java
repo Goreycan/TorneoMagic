@@ -26,6 +26,7 @@ public class CartaMazoController {
 
     @PostMapping("/mazo/{mazoId}/carta/{cartaId}")
     public ResponseEntity<String> agregarCartaAMazo(
+            @Valid
             @PathVariable Long mazoId, 
             @PathVariable Long cartaId, 
             @RequestParam(defaultValue = "1") Integer cantidad) {

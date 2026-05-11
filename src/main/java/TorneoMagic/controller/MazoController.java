@@ -37,7 +37,7 @@ public class MazoController {
     }
 
     @PostMapping
-    public ResponseEntity<Mazo> crearMazo(@RequestBody Mazo mazo) {
+    public ResponseEntity<Mazo> crearMazo(@Valid @RequestBody Mazo mazo) {
         try {
             Mazo guardado = mazoService.guardar(mazo);
             return new ResponseEntity<>(guardado, HttpStatus.CREATED);
