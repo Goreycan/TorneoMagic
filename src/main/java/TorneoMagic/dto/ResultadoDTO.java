@@ -9,20 +9,25 @@ import lombok.*;
 public class ResultadoDTO {
 
     private Long id;
-    // Partida relacionada
+
     private Long partidaId;
-    // Ganador
+
+    private String mesa;
+
     private Long ganadorId;
-    // Puntajes jugadores
-    private Integer puntosJugador1;
-    private Integer puntosJugador2;
-    private Integer puntosJugador3;
-    private Integer puntosJugador4;
-    private Integer puntosJugador5;
-    // Posiciones finales opcionales
+    private String nombreGanador;
+
+    private Integer puntajeJugador1;
+    private Integer puntajeJugador2;
+    private Integer puntajeJugador3;
+    private Integer puntajeJugador4;
+    private Integer puntajeJugador5;
+
     private Integer posicionJugador1;
     private Integer posicionJugador2;
     private Integer posicionJugador3;
     private Integer posicionJugador4;
     private Integer posicionJugador5;
+
+    private String observaciones;
 }

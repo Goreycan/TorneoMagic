@@ -61,26 +61,18 @@ public class ResultadoService {
     // =====================================
 
     public Resultado registrarResultado(Resultado resultado) {
-        Partida partida = resultado.getPartida();
-        if (partida == null) {
-            throw new RuntimeException("La partida es obligatoria");
-        }
-
-        if (resultado.getGanador() == null) {
-            throw new RuntimeException("Debe existir un ganador");
-        }
-
-        Resultado resultadoGuardado = resultadoRepository.save(resultado);
-        partida.setEstado("FINALIZADA");
-        partidaRepository.save(partida);
-        List<Participacion> participaciones = participacionService.listarParticipaciones();
-        for (Participacion participacion : participaciones) {
-            if (participacion.getJugador().getId().equals(resultado.getGanador().getId())) {
-                participacionService.sumarPuntos(participacion,3);
-            }
-        }
-        return resultadoGuardado;
+    Partida partida = resultado.getPartida();
+    if (partida == null) {
+        throw new RuntimeException("La partida es obligatoria");
     }
+    if (resultado.getGanador() == null) {
+        throw new RuntimeException("Debe existir un ganador");
+    }
+    Resultado resultadoGuardado = resultadoRepository.save(resultado);
+    partida.setEstado("FINALIZADA");
+    partidaRepository.save(partida);
+    return resultadoGuardado;
+}
 
     // =====================================
     // CONVERTIR DTO

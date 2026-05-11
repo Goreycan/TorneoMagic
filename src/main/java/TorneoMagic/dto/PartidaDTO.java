@@ -13,10 +13,11 @@ public class PartidaDTO {
     private String estado;
     private Integer cantidadJugadores;
     private Long rondaId;
+    private Integer numeroRonda;
     // Jugadores de la partida
-    private Long jugador1Id;
-    private Long jugador2Id;
-    private Long jugador3Id;
-    private Long jugador4Id;
-    private Long jugador5Id;
+    private String jugador1;
+    private String jugador2;
+    private String jugador3;
+    private String jugador4;
+    private String jugador5;
 }

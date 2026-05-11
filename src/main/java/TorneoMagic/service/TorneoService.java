@@ -82,7 +82,8 @@ public class TorneoService {
             .fechaFin(torneo.getFechaFin())
             .estado(torneo.getEstado())
             .ubicacion(torneo.getUbicacion())
-            .localId(localId)
+            .localId(torneo.getLocal().getId())
             .build();
+
 }
 }

@@ -52,19 +52,30 @@ public class MazoService {
     }
 
     private MazoDTO convertirADTO(Mazo mazo) {
-        MazoDTO dto = new MazoDTO();
-        dto.setId(mazo.getId());
-        dto.setNombre(mazo.getNombre());
-        dto.setDescripcion(mazo.getDescripcion());
-        
-        if (mazo.getJugador() != null) {
-            dto.setNombreJugador(mazo.getJugador().getNombre());
-        } else {
-            dto.setNombreJugador(" busca dueño");
-        }    
-        return dto;
+    MazoDTO dto = new MazoDTO();
+    dto.setId(mazo.getId());
+    dto.setNombre(mazo.getNombre());
+    dto.setDescripcion(mazo.getDescripcion());
+    if (mazo.getJugador() != null) {
+        dto.setNombreJugador(mazo.getJugador().getNombre());
+    } else {
+        dto.setNombreJugador("busca dueño");
     }
-    //prueb
+    return dto;
+}
+
+// =====================================
+// ELIMINAR
+// =====================================
+
+public String eliminar(Long id) {
+    if (!mazoRepository.existsById(id)) {
+        return "Mazo no encontrado";
+    }
+    mazoRepository.deleteById(id);
+    return "Mazo eliminado exitosamente";
+}
+//prueb
     
 }
 

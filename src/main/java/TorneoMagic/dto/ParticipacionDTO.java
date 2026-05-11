@@ -9,8 +9,12 @@ import lombok.*;
 public class ParticipacionDTO {
 
     private Long id;
+
     private Long jugadorId;
+    private String nombreJugador;
+
     private Long torneoId;
-    private Integer puntos;
-    private Integer posicion;
+    private String nombreTorneo;
+
+    private Integer rondaInscripcion;
 }

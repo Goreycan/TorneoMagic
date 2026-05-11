@@ -72,6 +72,24 @@ public class CartaMazoService {
 
         return dto;
     }
+
+    // =====================================
+    // ELIMINAR CARTA DE MAZO
+    // =====================================
+
+public String eliminarCartaDeMazo(Long cartaId, Long mazoId) {
+    List<CartaMazo> relaciones = cartaMazoRepository.findAll();
+    for (CartaMazo relacion : relaciones) {
+        if (relacion.getCarta() != null &&
+            relacion.getMazo() != null &&
+            relacion.getCarta().getId().equals(cartaId) &&
+            relacion.getMazo().getId().equals(mazoId)) {
+            cartaMazoRepository.delete(relacion);
+            return "Carta eliminada del mazo exitosamente";
+        }
+    }
+    return "No se encontró la relación carta-mazo";
+}
     //p
 }
 

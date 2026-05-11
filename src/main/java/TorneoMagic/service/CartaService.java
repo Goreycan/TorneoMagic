@@ -17,6 +17,16 @@ public class CartaService {
     @Autowired
     private CartaRepository cartaRepository;
 
+    // =====================================
+    // BUSCAR POR ID
+    // =====================================
+
+public CartaDTO buscarPorId(Long id) {
+    Carta carta = cartaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Carta no encontrada"));
+    return convertirADTO(carta);
+}
+
     public CartaDTO guardarCarta(CartaDTO cartaDTO) {
         Carta carta = new Carta();
         carta.setNombre(cartaDTO.getNombre());
@@ -42,6 +52,18 @@ public class CartaService {
         
         return dto;
     }
+
+    // =====================================
+    // ELIMINAR
+    // =====================================
+
+public String eliminar(Long id) {
+    if (!cartaRepository.existsById(id)) {
+        return "Carta no encontrada";
+    }
+    cartaRepository.deleteById(id);
+    return "Carta eliminada exitosamente";
+}
     //prueba
 }
 
