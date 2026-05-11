@@ -1,5 +1,13 @@
 package TorneoMagic.DTO;
 
-public class CartaMazoDTO {
+import lombok.Data;
 
+@Data
+public class CartaMazoDTO {
+    private Long id;
+    private Integer cantidad;
+    private String nombreMazo;  
+    private String nombreCarta; 
 }
+
+
