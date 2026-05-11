@@ -3,33 +3,31 @@ package TorneoMagic.service;
 import TorneoMagic.model.Participacion;
 import TorneoMagic.model.Partida;
 import TorneoMagic.model.Resultado;
-import TorneoMagic.repository.ParticipacionRepository;
 import TorneoMagic.repository.PartidaRepository;
 import TorneoMagic.repository.ResultadoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class ResultadoService {
 
     private final ResultadoRepository resultadoRepository;
-    private final ParticipacionRepository participacionRepository;
+    private final ParticipacionService participacionService;
     private final PartidaRepository partidaRepository;
 
     public ResultadoService(
             ResultadoRepository resultadoRepository,
-            ParticipacionRepository participacionRepository,
+            ParticipacionService participacionService,
             PartidaRepository partidaRepository
     ) {
         this.resultadoRepository = resultadoRepository;
-        this.participacionRepository = participacionRepository;
+        this.participacionService = participacionService;
         this.partidaRepository = partidaRepository;
     }
 
     // =====================================
-    // CRUD BÁSICO
+    // CRUD
     // =====================================
 
     public List<Resultado> listarResultados() {
@@ -52,12 +50,11 @@ public class ResultadoService {
     // LÓGICA DE NEGOCIO
     // =====================================
 
-    public Resultado registrarResultado(Resultado resultado) {
+    public Resultado registrarResultado(
+            Resultado resultado
+    ) {
 
-        // ==============================
         // VALIDAR PARTIDA
-        // ==============================
-
         Partida partida = resultado.getPartida();
 
         if (partida == null) {
@@ -66,70 +63,41 @@ public class ResultadoService {
             );
         }
 
-        // ==============================
         // VALIDAR GANADOR
-        // ==============================
-
         if (resultado.getGanador() == null) {
             throw new RuntimeException(
                     "Debe existir un ganador"
             );
         }
 
-        // ==============================
         // GUARDAR RESULTADO
-        // ==============================
-
         Resultado resultadoGuardado =
                 resultadoRepository.save(resultado);
 
-        // ==============================
         // FINALIZAR PARTIDA
-        // ==============================
-
         partida.setEstado("FINALIZADA");
 
         partidaRepository.save(partida);
 
-        // ==============================
-        // ACTUALIZAR PUNTOS PARTICIPACIÓN
-        // ==============================
-
+        // ACTUALIZAR PUNTOS
         List<Participacion> participaciones =
-                participacionRepository.findAll();
+                participacionService.listarParticipaciones();
 
         for (Participacion participacion : participaciones) {
 
-            // GANADOR = 3 PUNTOS
-            if (participacion.getJugador().getId()
-                    .equals(resultado.getGanador().getId())) {
+            if (participacion.getJugador()
+                    .getId()
+                    .equals(
+                            resultado.getGanador().getId()
+                    )) {
 
-                participacion.setPuntos(
-                        participacion.getPuntos() + 3
+                participacionService.sumarPuntos(
+                        participacion,
+                        3
                 );
-
-                participacionRepository.save(participacion);
             }
         }
 
         return resultadoGuardado;
-    }
-
-    // =====================================
-    // GENERAR RANKING
-    // =====================================
-
-    public List<Participacion> generarRanking() {
-
-        List<Participacion> ranking =
-                participacionRepository.findAll();
-
-        ranking.sort(
-                Comparator.comparing(
-                        Participacion::getPuntos
-                ).reversed()
-        );
-
-        return ranking;
     }
 }

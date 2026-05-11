@@ -15,23 +15,40 @@ public class TorneoService {
         this.torneoRepository = torneoRepository;
     }
 
-    // LISTAR TODOS LOS TORNEOS
+    // =====================================
+    // CRUD BÁSICO
+    // =====================================
+
     public List<Torneo> listarTorneos() {
         return torneoRepository.findAll();
     }
 
-    // GUARDAR TORNEO
     public Torneo guardarTorneo(Torneo torneo) {
         return torneoRepository.save(torneo);
     }
 
-    // BUSCAR POR ID
     public Torneo obtenerPorId(Long id) {
         return torneoRepository.findById(id).orElse(null);
     }
 
-    // ELIMINAR TORNEO
     public void eliminarTorneo(Long id) {
         torneoRepository.deleteById(id);
+    }
+
+    // =====================================
+    // LÓGICA DE NEGOCIO
+    // =====================================
+
+    public boolean torneoActivo(Torneo torneo) {
+
+        return torneo.getEstado()
+                .equalsIgnoreCase("ACTIVO");
+    }
+
+    public void finalizarTorneo(Torneo torneo) {
+
+        torneo.setEstado("FINALIZADO");
+
+        torneoRepository.save(torneo);
     }
 }
