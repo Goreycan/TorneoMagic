@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import TorneoMagic.model.Comuna;
+import TorneoMagic.DTOs.ComunaDTO;
 import TorneoMagic.service.ComunaService;
 
 @RestController
@@ -27,25 +27,25 @@ public class ComunaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comuna>> listar() {
+    public ResponseEntity<List<ComunaDTO>> listar() {
         return ResponseEntity.ok(comunaService.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comuna> obtenerPorId(@PathVariable Long id) {
-        Optional<Comuna> comuna = comunaService.obtenerPorId(id);
+    public ResponseEntity<ComunaDTO> obtenerPorId(@PathVariable Long id) {
+        Optional<ComunaDTO> comuna = comunaService.obtenerPorId(id);
         return comuna.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Comuna> crear(@RequestBody Comuna comuna) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(comunaService.crear(comuna));
+    public ResponseEntity<ComunaDTO> crear(@RequestBody ComunaDTO comunaDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(comunaService.crear(comunaDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comuna> actualizar(@PathVariable Long id, @RequestBody Comuna comuna) {
-        return ResponseEntity.ok(comunaService.actualizar(id, comuna));
+    public ResponseEntity<ComunaDTO> actualizar(@PathVariable Long id, @RequestBody ComunaDTO comunaDTO) {
+        return ResponseEntity.ok(comunaService.actualizar(id, comunaDTO));
     }
 
     @DeleteMapping("/{id}")
