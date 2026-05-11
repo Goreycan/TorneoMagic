@@ -29,10 +29,7 @@ public class ResultadoService {
     // =====================================
 
     public List<ResultadoDTO> obtenerTodos() {
-        return resultadoRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return resultadoRepository.findAll().stream().map(this::convertirADTO).toList();
     }
 
     // =====================================
@@ -48,9 +45,7 @@ public class ResultadoService {
     // =====================================
 
     public Resultado obtenerPorId(Long id) {
-        return resultadoRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Resultado no encontrado"));
+        return resultadoRepository.findById(id).orElseThrow(() -> new RuntimeException("Resultado no encontrado"));
     }
 
     // =====================================
@@ -68,35 +63,21 @@ public class ResultadoService {
     public Resultado registrarResultado(Resultado resultado) {
         Partida partida = resultado.getPartida();
         if (partida == null) {
-            throw new RuntimeException(
-                    "La partida es obligatoria"
-            );
+            throw new RuntimeException("La partida es obligatoria");
         }
 
         if (resultado.getGanador() == null) {
-            throw new RuntimeException(
-                    "Debe existir un ganador"
-            );
+            throw new RuntimeException("Debe existir un ganador");
         }
 
-        Resultado resultadoGuardado =
-                resultadoRepository.save(resultado);
+        Resultado resultadoGuardado = resultadoRepository.save(resultado);
         partida.setEstado("FINALIZADA");
         partidaRepository.save(partida);
-        List<Participacion> participaciones =
-                participacionService
-                        .listarParticipaciones();
-
+        List<Participacion> participaciones = participacionService.listarParticipaciones();
         for (Participacion participacion : participaciones) {
-            if (participacion.getJugador()
-                    .getId()
-                    .equals(
-                            resultado.getGanador().getId()
-                    )) {
-                participacionService.sumarPuntos(
-                        participacion,
-                        3
-                );
+            if (participacion.getJugador().getId().equals(resultado.getGanador().getId())) 
+            {
+                participacionService.sumarPuntos(participacion,3);
             }
         }
         return resultadoGuardado;
@@ -106,42 +87,27 @@ public class ResultadoService {
     // CONVERTIR DTO
     // =====================================
 
-    private ResultadoDTO convertirADTO(
-            Resultado resultado
-    ) {
-        ResultadoDTO dto =
-                new ResultadoDTO();
+    private ResultadoDTO convertirADTO(Resultado resultado) {
+        ResultadoDTO dto = new ResultadoDTO();
         dto.setId(resultado.getId());
         if (resultado.getPartida() != null) {
-            dto.setMesa(
-                    resultado.getPartida()
-                            .getMesa()
-            );
+            dto.setMesa(resultado.getPartida().getMesa());
         }
 
         if (resultado.getGanador() != null) {
-            dto.setNombreGanador(
-                    resultado.getGanador()
-                            .getNombre()
-            );
+            dto.setNombreGanador(resultado.getGanador().getNombre());
         }
-        dto.setPuntajeJugador1(
-                resultado.getPuntajeJugador1()
+        dto.setPuntajeJugador1(resultado.getPuntajeJugador1()
         );
-        dto.setPuntajeJugador2(
-                resultado.getPuntajeJugador2()
+        dto.setPuntajeJugador2(resultado.getPuntajeJugador2()
         );
-        dto.setPuntajeJugador3(
-                resultado.getPuntajeJugador3()
+        dto.setPuntajeJugador3(resultado.getPuntajeJugador3()
         );
-        dto.setPuntajeJugador4(
-                resultado.getPuntajeJugador4()
+        dto.setPuntajeJugador4(resultado.getPuntajeJugador4()
         );
-        dto.setPuntajeJugador5(
-                resultado.getPuntajeJugador5()
+        dto.setPuntajeJugador5(resultado.getPuntajeJugador5()
         );
-        dto.setObservaciones(
-                resultado.getObservaciones()
+        dto.setObservaciones(resultado.getObservaciones()
         );
         return dto;
     }

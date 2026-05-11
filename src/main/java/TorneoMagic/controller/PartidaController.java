@@ -20,49 +20,32 @@ public class PartidaController {
 
     @GetMapping
     public ResponseEntity<List<PartidaDTO>> listarTodas() {
-        List<PartidaDTO> partidas =
-                partidaService.obtenerTodas();
+        List<PartidaDTO> partidas = partidaService.obtenerTodas();
         if (partidas.isEmpty()) {
-            return new ResponseEntity<>(
-                    HttpStatus.NO_CONTENT
-            );
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(
-                partidas,
-                HttpStatus.OK
+        return new ResponseEntity<>(partidas,HttpStatus.OK
         );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Partida> buscarPorId(@PathVariable Long id) {
         try {
-            Partida partida =
-                    partidaService.obtenerPorId(id);
-            return new ResponseEntity<>(
-                    partida,
-                    HttpStatus.OK
-            );
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(
-                    HttpStatus.NOT_FOUND
-            );
+            Partida partida = partidaService.obtenerPorId(id);
+            return new ResponseEntity<>(partida,HttpStatus.OK);
+        } 
+        catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
     public ResponseEntity<Partida> guardarPartida(@Valid @RequestBody Partida partida) {
         try {
-            Partida guardada =
-                    partidaService
-                            .guardarPartida(partida);
-            return new ResponseEntity<>(
-                    guardada,
-                    HttpStatus.CREATED
-            );
+            Partida guardada = partidaService.guardarPartida(partida);
+            return new ResponseEntity<>(guardada,HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    HttpStatus.BAD_REQUEST
-            );
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -70,15 +53,9 @@ public class PartidaController {
     public ResponseEntity<String> eliminarPartida(@PathVariable Long id) {
         try {
             partidaService.eliminarPartida(id);
-            return new ResponseEntity<>(
-                    "Partida eliminada",
-                    HttpStatus.OK
-            );
+            return new ResponseEntity<>("Partida eliminada",HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Partida no encontrada",
-                    HttpStatus.NOT_FOUND
-            );
+            return new ResponseEntity<>("Partida no encontrada",HttpStatus.NOT_FOUND);
         }
     }
 }

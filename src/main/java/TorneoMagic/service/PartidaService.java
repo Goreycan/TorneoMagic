@@ -27,19 +27,14 @@ public class PartidaService {
     // =====================================
 
     public List<PartidaDTO> obtenerTodas() {
-        return partidaRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return partidaRepository.findAll().stream().map(this::convertirADTO).toList();
     }
 
     // =====================================
     // GUARDAR
     // =====================================
 
-    public Partida guardarPartida(
-            Partida partida
-    ) {
+    public Partida guardarPartida(Partida partida) {
         return partidaRepository.save(partida);
     }
 
@@ -48,11 +43,7 @@ public class PartidaService {
     // =====================================
 
     public Partida obtenerPorId(Long id) {
-        return partidaRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Partida no encontrada"
-                        )
+        return partidaRepository.findById(id).orElseThrow(() -> new RuntimeException("Partida no encontrada")
                 );
     }
 
@@ -68,27 +59,12 @@ public class PartidaService {
     // GENERAR PARTIDAS
     // =====================================
 
-    public List<Partida> generarPartidas(
-            Ronda ronda,
-            List<Jugador> jugadores
-    ) {
-
+    public List<Partida> generarPartidas(Ronda ronda,List<Jugador> jugadores) {
         Collections.shuffle(jugadores);
-        List<Partida> partidas =
-                new ArrayList<>();
+        List<Partida> partidas =new ArrayList<>();
         int mesa = 1;
-
-        for (int i = 0;
-             i < jugadores.size();
-             i += 4) {
-            List<Jugador> grupo =
-                    jugadores.subList(
-                            i,
-                            Math.min(
-                                    i + 4,
-                                    jugadores.size()
-                            )
-                    );
+        for (int i = 0;i < jugadores.size();i += 4) {
+            List<Jugador> grupo =jugadores.subList(i,Math.min(i + 4,jugadores.size()));
             if (grupo.size() < 3) {
                 break;
             }
@@ -96,26 +72,14 @@ public class PartidaService {
                     .mesa("Mesa " + mesa)
                     .estado("PENDIENTE")
                     .ronda(ronda)
-                    .cantidadJugadores(
-                            grupo.size()
-                    )
+                    .cantidadJugadores(grupo.size())
                     .jugador1(grupo.get(0))
                     .jugador2(grupo.get(1))
                     .jugador3(grupo.get(2))
-                    .jugador4(
-                            grupo.size() >= 4
-                                    ? grupo.get(3)
-                                    : null
-                    )
-                    .jugador5(
-                            grupo.size() == 5
-                                    ? grupo.get(4)
-                                    : null
-                    )
+                    .jugador4(grupo.size() >= 4? grupo.get(3): null)
+                    .jugador5(grupo.size() == 5? grupo.get(4): null)
                     .build();
-            partidas.add(
-                    partidaRepository.save(partida)
-            );
+            partidas.add(partidaRepository.save(partida));
             mesa++;
         }
         return partidas;
@@ -125,12 +89,8 @@ public class PartidaService {
     // FINALIZAR PARTIDA
     // =====================================
 
-    public void finalizarPartida(
-            Partida partida
-    ) {
-        partida.setEstado(
-                "FINALIZADA"
-        );
+    public void finalizarPartida(Partida partida) {
+        partida.setEstado("FINALIZADA");
         partidaRepository.save(partida);
     }
 
@@ -138,56 +98,28 @@ public class PartidaService {
     // CONVERTIR DTO
     // =====================================
 
-    private PartidaDTO convertirADTO(
-            Partida partida
-    ) {
-
-        PartidaDTO dto =
-                new PartidaDTO();
+    private PartidaDTO convertirADTO(Partida partida) {
+        PartidaDTO dto =new PartidaDTO();
         dto.setId(partida.getId());
         dto.setMesa(partida.getMesa());
         dto.setEstado(partida.getEstado());
-        dto.setCantidadJugadores(partida.getCantidadJugadores()
-        );
+        dto.setCantidadJugadores(partida.getCantidadJugadores());
         if (partida.getRonda() != null) {
-            dto.setNumeroRonda(
-                    partida.getRonda()
-                            .getNumeroRonda()
-            );
+            dto.setNumeroRonda(partida.getRonda().getNumeroRonda());
         }
-        if (partida.getJugador1() != null) {
-            dto.setJugador1(
-                    partida.getJugador1()
-                            .getNombre()
-            );
+        if (partida.getJugador1() != null) {dto.setJugador1(partida.getJugador1().getNombre());
         }
-
         if (partida.getJugador2() != null) {
-            dto.setJugador2(
-                    partida.getJugador2()
-                            .getNombre()
-            );
+            dto.setJugador2(partida.getJugador2().getNombre());
         }
-
         if (partida.getJugador3() != null) {
-            dto.setJugador3(
-                    partida.getJugador3()
-                            .getNombre()
-            );
+            dto.setJugador3(partida.getJugador3().getNombre());
         }
-
         if (partida.getJugador4() != null) {
-            dto.setJugador4(
-                    partida.getJugador4()
-                            .getNombre()
-            );
+            dto.setJugador4(partida.getJugador4().getNombre());
         }
-
         if (partida.getJugador5() != null) {
-            dto.setJugador5(
-                    partida.getJugador5()
-                            .getNombre()
-            );
+            dto.setJugador5(partida.getJugador5().getNombre());
         }
         return dto;
     }

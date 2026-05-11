@@ -20,10 +20,7 @@ public class TorneoService {
     // =====================================
 
     public List<TorneoDTO> obtenerTodos() {
-        return torneoRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return torneoRepository.findAll().stream().map(this::convertirADTO).toList();
     }
 
     // =====================================
@@ -39,9 +36,7 @@ public class TorneoService {
     // =====================================
 
     public Torneo obtenerPorId(Long id) {
-        return torneoRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Torneo no encontrado"));
+        return torneoRepository.findById(id).orElseThrow(() -> new RuntimeException("Torneo no encontrado"));
     }
 
     // =====================================
@@ -57,8 +52,7 @@ public class TorneoService {
     // =====================================
 
     public boolean torneoActivo(Torneo torneo) {
-        return torneo.getEstado()
-                .equalsIgnoreCase("ACTIVO");
+        return torneo.getEstado().equalsIgnoreCase("ACTIVO");
     }
 
     // =====================================
@@ -75,8 +69,7 @@ public class TorneoService {
     // =====================================
 
     private TorneoDTO convertirADTO(Torneo torneo) {
-        TorneoDTO dto =
-                new TorneoDTO();
+        TorneoDTO dto = new TorneoDTO();
         dto.setId(torneo.getId());
         dto.setNombre(torneo.getNombre());
         dto.setFormato(torneo.getFormato());

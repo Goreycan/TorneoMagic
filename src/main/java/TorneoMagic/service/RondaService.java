@@ -25,10 +25,7 @@ public class RondaService {
     // =====================================
 
     public List<RondaDTO> obtenerTodas() {
-        return rondaRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return rondaRepository.findAll().stream().map(this::convertirADTO).toList();
     }
 
     // =====================================
@@ -44,11 +41,7 @@ public class RondaService {
     // =====================================
 
     public Ronda obtenerPorId(Long id) {
-        return rondaRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Ronda no encontrada"
-                        )
+        return rondaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ronda no encontrada")
                 );
     }
 
@@ -64,9 +57,7 @@ public class RondaService {
     // CALCULAR RONDAS
     // =====================================
 
-    public Integer calcularCantidadRondas(
-            Integer jugadores
-        ) {
+    public Integer calcularCantidadRondas(Integer jugadores) {
         if (jugadores <= 32) {
             return 4;
         }
@@ -77,24 +68,12 @@ public class RondaService {
     // CREAR RONDAS
     // =====================================
 
-    public List<Ronda> crearRondas(
-            Torneo torneo,
-            Integer jugadores
-    ) {
-        Integer cantidadRondas =
-                calcularCantidadRondas(jugadores);
-        List<Ronda> rondas =
-                new ArrayList<>();
-        for (int i = 1;
-             i <= cantidadRondas;
-             i++) {
-            Ronda ronda = Ronda.builder()
-                    .numeroRonda(i)
-                    .torneo(torneo)
-                    .build();
-            rondas.add(
-                    rondaRepository.save(ronda)
-            );
+    public List<Ronda> crearRondas(Torneo torneo,Integer jugadores) {
+        Integer cantidadRondas = calcularCantidadRondas(jugadores);
+        List<Ronda> rondas = new ArrayList<>();
+        for (int i = 1;i <= cantidadRondas;i++) 
+        {
+            Ronda ronda = Ronda.builder().numeroRonda(i).torneo(torneo).build();rondas.add(rondaRepository.save(ronda));
         }
         return rondas;
     }
@@ -103,20 +82,13 @@ public class RondaService {
     // CONVERTIR DTO
     // =====================================
 
-    private RondaDTO convertirADTO(
-            Ronda ronda
-    ) {
-        RondaDTO dto =
-                new RondaDTO();
+    private RondaDTO convertirADTO(Ronda ronda) {
+        RondaDTO dto = new RondaDTO();
         dto.setId(ronda.getId());
-        dto.setNumeroRonda(
-                ronda.getNumeroRonda()
-        );
-        if (ronda.getTorneo() != null) {
-            dto.setNombreTorneo(
-                    ronda.getTorneo()
-                            .getNombre()
-            );
+        dto.setNumeroRonda(ronda.getNumeroRonda());
+        if (ronda.getTorneo() != null) 
+        {
+            dto.setNombreTorneo(ronda.getTorneo().getNombre());
         }
         return dto;
     }

@@ -20,48 +20,32 @@ public class TorneoController {
 
     @GetMapping
     public ResponseEntity<List<TorneoDTO>> listarTodos() {
-        List<TorneoDTO> torneos =
-                torneoService.obtenerTodos();
+        List<TorneoDTO> torneos = torneoService.obtenerTodos();
         if (torneos.isEmpty()) {
-            return new ResponseEntity<>(
-                    HttpStatus.NO_CONTENT
-            );
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(
-                torneos,
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(torneos,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Torneo> buscarPorId(@PathVariable Long id) {
         try {
-            Torneo torneo =
-                    torneoService.obtenerPorId(id);
-            return new ResponseEntity<>(
-                    torneo,
-                    HttpStatus.OK
-            );
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(
-                    HttpStatus.NOT_FOUND
-            );
+            Torneo torneo =torneoService.obtenerPorId(id);
+            return new ResponseEntity<>(torneo,HttpStatus.OK);
+        } 
+        catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
     public ResponseEntity<Torneo> guardarTorneo(@Valid @RequestBody Torneo torneo) {
         try {
-            Torneo guardado =
-                    torneoService.guardarTorneo(torneo);
-            return new ResponseEntity<>(
-                    guardado,
-                    HttpStatus.CREATED
-            );
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    HttpStatus.BAD_REQUEST
-            );
+            Torneo guardado =torneoService.guardarTorneo(torneo);
+            return new ResponseEntity<>(guardado,HttpStatus.CREATED);
+        } 
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -69,15 +53,10 @@ public class TorneoController {
     public ResponseEntity<String> eliminarTorneo(@PathVariable Long id) {
         try {
             torneoService.eliminarTorneo(id);
-            return new ResponseEntity<>(
-                    "Torneo eliminado",
-                    HttpStatus.OK
-            );
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Torneo no encontrado",
-                    HttpStatus.NOT_FOUND
-            );
+            return new ResponseEntity<>("Torneo eliminado",HttpStatus.OK);
+        } 
+        catch (Exception e) {
+            return new ResponseEntity<>("Torneo no encontrado",HttpStatus.NOT_FOUND);
         }
     }
 }

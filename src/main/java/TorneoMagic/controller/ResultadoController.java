@@ -20,65 +20,42 @@ public class ResultadoController {
 
     @GetMapping
     public ResponseEntity<List<ResultadoDTO>> listarTodos() {
-        List<ResultadoDTO> resultados =
-                resultadoService.obtenerTodos();
+        List<ResultadoDTO> resultados =resultadoService.obtenerTodos();
         if (resultados.isEmpty()) {
-            return new ResponseEntity<>(
-                    HttpStatus.NO_CONTENT
-            );
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(
-                resultados,
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(resultados,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Resultado> buscarPorId(@PathVariable Long id) {
         try {
-            Resultado resultado =
-                    resultadoService.obtenerPorId(id);
-            return new ResponseEntity<>(
-                    resultado,
-                    HttpStatus.OK
-            );
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(
-                    HttpStatus.NOT_FOUND
-            );
+            Resultado resultado = resultadoService.obtenerPorId(id);
+            return new ResponseEntity<>(resultado,HttpStatus.OK);
+        } 
+        catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping
     public ResponseEntity<Resultado> guardarResultado(@Valid @RequestBody Resultado resultado) {
         try {
-            Resultado guardado =
-                    resultadoService
-                            .guardarResultado(resultado);
-            return new ResponseEntity<>(
-                    guardado,
-                    HttpStatus.CREATED
-            );
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    HttpStatus.BAD_REQUEST
-            );
+            Resultado guardado = resultadoService.guardarResultado(resultado);
+            return new ResponseEntity<>(guardado,HttpStatus.CREATED);
+        } 
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/registrar")
     public ResponseEntity<Resultado> registrarResultado(@Valid @RequestBody Resultado resultado) {
         try {
-            Resultado registrado =
-                    resultadoService
-                            .registrarResultado(resultado);
-            return new ResponseEntity<>(
-                    registrado,
-                    HttpStatus.CREATED
-            );
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    HttpStatus.BAD_REQUEST
-            );
+            Resultado registrado =resultadoService.registrarResultado(resultado);
+            return new ResponseEntity<>(registrado,HttpStatus.CREATED);
+        } 
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -86,15 +63,9 @@ public class ResultadoController {
     public ResponseEntity<String> eliminarResultado(@PathVariable Long id) {
         try {
             resultadoService.eliminarResultado(id);
-            return new ResponseEntity<>(
-                    "Resultado eliminado",
-                    HttpStatus.OK
-            );
+            return new ResponseEntity<>("Resultado eliminado",HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Resultado no encontrado",
-                    HttpStatus.NOT_FOUND
-            );
+            return new ResponseEntity<>("Resultado no encontrado",HttpStatus.NOT_FOUND);
         }
     }
 }
