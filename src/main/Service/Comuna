@@ -1,0 +1,42 @@
+package TorneoMagic.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import TorneoMagic.model.Comuna;
+import TorneoMagic.repository.ComunaRepository;
+
+@Service
+public class ComunaService {
+    private final ComunaRepository comunaRepository;
+
+    public ComunaService(ComunaRepository comunaRepository) {
+        this.comunaRepository = comunaRepository;
+    }
+
+    public List<Comuna> listar() {
+        return comunaRepository.findAll();
+    }
+
+    public Optional<Comuna> obtenerPorId(Long id) {
+        return comunaRepository.findById(id);
+    }
+
+    public Comuna crear(Comuna comuna) {
+        return comunaRepository.save(comuna);
+    }
+
+    public Comuna actualizar(Long id, Comuna comuna) {
+        return comunaRepository.findById(id).map(comunaExistente -> {
+            comunaExistente.setNombre(comuna.getNombre());
+            comunaExistente.setRegion(comuna.getRegion());
+            return comunaRepository.save(comunaExistente);
+        }).orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+    }
+
+    public void eliminar(Long id) {
+        comunaRepository.deleteById(id);
+    }
+}
