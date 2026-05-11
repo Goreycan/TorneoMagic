@@ -22,6 +22,7 @@ public class CartaService {
         carta.setNombre(cartaDTO.getNombre());
         
         Carta cartaGuardada = cartaRepository.save(carta);
+        
         return convertirADTO(cartaGuardada);
     }
 
@@ -35,8 +36,13 @@ public class CartaService {
         CartaDTO dto = new CartaDTO();
         dto.setId(carta.getId());
         dto.setNombre(carta.getNombre());
+        dto.setDescripcion(carta.getDescripcion());
+        dto.setRareza(carta.getRareza());
+        dto.setCosto(carta.getCosto());
+        
         return dto;
     }
+    //prueba
 }
 
 

@@ -1,5 +1,6 @@
-package TorneoMagic.service;
+ package TorneoMagic.service;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,10 @@ import TorneoMagic.model.Mazo;
 import TorneoMagic.repository.JugadorRepository;
 import TorneoMagic.repository.MazoRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class MazoService {
 
     @Autowired
@@ -22,35 +23,48 @@ public class MazoService {
     @Autowired
     private JugadorRepository jugadorRepository;
 
-    public MazoDTO guardarMazo(MazoDTO mazoDTO) {
-        Mazo mazo = new Mazo();
-        mazo.setNombre(mazoDTO.getNombre());
-
-        // Buscamos al jugador por el ID que viene en el DTO
-        if (mazoDTO.getIdJugador() != null) {
-            Jugador jugador = jugadorRepository.findById(mazoDTO.getIdJugador())
-                .orElseThrow(() -> new RuntimeException("Jugador no encontrado"));
-            mazo.setJugador(jugador);
-        }
-
-        Mazo mazoGuardado = mazoRepository.save(mazo);
-        return convertirADTO(mazoGuardado);
-    }
-
     public List<MazoDTO> obtenerTodos() {
         return mazoRepository.findAll().stream()
                 .map(this::convertirADTO)
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public MazoDTO buscarPorId(Long id) {
+        Mazo mazo = mazoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("¡Mazo no encontrado en la biblioteca!"));
+        return convertirADTO(mazo);
+    }
+
+    public Mazo guardar(Mazo mazo) {
+        return mazoRepository.save(mazo);
+    }
+
+    public String asignarDueñoAMazo(Long mazoId, Long jugadorId) {
+        Mazo mazo = mazoRepository.findById(mazoId)
+            .orElseThrow(() -> new RuntimeException("Error: El Mazo no existe."));
+        Jugador jugador = jugadorRepository.findById(jugadorId)
+            .orElseThrow(() -> new RuntimeException("Error: El Jugador no existe."));
+        
+        mazo.setJugador(jugador); 
+        mazoRepository.save(mazo);
+
+        return "El mazo '" + mazo.getNombre() + "' ahora pertenece a: " + jugador.getNombre();
     }
 
     private MazoDTO convertirADTO(Mazo mazo) {
         MazoDTO dto = new MazoDTO();
         dto.setId(mazo.getId());
         dto.setNombre(mazo.getNombre());
+        dto.setDescripcion(mazo.getDescripcion());
+        
         if (mazo.getJugador() != null) {
-            dto.setIdJugador(mazo.getJugador().getId()); // Solo el ID, ¡adiós bucles!
-        }
+            dto.setNombreJugador(mazo.getJugador().getNombre());
+        } else {
+            dto.setNombreJugador(" busca dueño");
+        }    
         return dto;
     }
+    //prueb
+    
 }
 
