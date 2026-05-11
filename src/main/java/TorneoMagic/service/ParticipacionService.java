@@ -21,18 +21,14 @@ public class ParticipacionService {
     // =====================================
 
     public List<ParticipacionDTO> obtenerTodas() {
-        return participacionRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return participacionRepository.findAll().stream().map(this::convertirADTO).toList();
     }
 
     // =====================================
     // GUARDAR
     // =====================================
 
-    public Participacion guardarParticipacion(
-            Participacion participacion) {
+    public Participacion guardarParticipacion(Participacion participacion) {
         return participacionRepository.save(participacion);
     }
 
@@ -41,9 +37,7 @@ public class ParticipacionService {
     // =====================================
 
     public Participacion obtenerPorId(Long id) {
-        return participacionRepository.findById(id).orElseThrow(() ->new RuntimeException(
-                                "Participación no encontrada")
-                );
+        return participacionRepository.findById(id).orElseThrow(() ->new RuntimeException("Participación no encontrada"));
     }
 
     // =====================================
@@ -61,8 +55,7 @@ public class ParticipacionService {
     public void sumarPuntos(Participacion participacion,Integer puntos) {
         if (participacion.getPuntos() == null) {participacion.setPuntos(0);
         }
-        participacion.setPuntos(participacion.getPuntos() + puntos
-        );
+        participacion.setPuntos(participacion.getPuntos() + puntos);
         participacionRepository.save(participacion);
     }
 
@@ -71,24 +64,20 @@ public class ParticipacionService {
     // =====================================
 
     public List<ParticipacionDTO> generarRanking() {
-        return participacionRepository.findAll().stream().sorted(
-            Comparator.comparing(Participacion::getPuntos).reversed())
-                .map(this::convertirADTO).toList();
+        return participacionRepository.findAll().stream().sorted(Comparator.comparing(
+            Participacion::getPuntos).reversed()).map(this::convertirADTO).toList();
     }
 
     // =====================================
     // CONVERTIR DTO
     // =====================================
 
-    private ParticipacionDTO convertirADTO(
-            Participacion participacion) {
+    private ParticipacionDTO convertirADTO(Participacion participacion) {
         ParticipacionDTO dto =new ParticipacionDTO();
         dto.setId(participacion.getId());
-        dto.setPuntos(participacion.getPuntos()
-        );
+        dto.setPuntos(participacion.getPuntos());
         if (participacion.getJugador() != null) {
-            dto.setNombreJugador(participacion.getJugador().getNombre()
-            );
+            dto.setNombreJugador(participacion.getJugador().getNombre());
         }
         if (participacion.getTorneo() != null) {
             dto.setNombreTorneo(participacion.getTorneo().getNombre());

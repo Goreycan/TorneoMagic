@@ -41,8 +41,7 @@ public class RondaService {
     // =====================================
 
     public Ronda obtenerPorId(Long id) {
-        return rondaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ronda no encontrada")
-                );
+        return rondaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ronda no encontrada"));
     }
 
     // =====================================
@@ -86,8 +85,7 @@ public class RondaService {
         RondaDTO dto = new RondaDTO();
         dto.setId(ronda.getId());
         dto.setNumeroRonda(ronda.getNumeroRonda());
-        if (ronda.getTorneo() != null) 
-        {
+        if (ronda.getTorneo() != null) {
             dto.setNombreTorneo(ronda.getTorneo().getNombre());
         }
         return dto;

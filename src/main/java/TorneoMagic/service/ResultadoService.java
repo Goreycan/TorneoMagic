@@ -75,8 +75,7 @@ public class ResultadoService {
         partidaRepository.save(partida);
         List<Participacion> participaciones = participacionService.listarParticipaciones();
         for (Participacion participacion : participaciones) {
-            if (participacion.getJugador().getId().equals(resultado.getGanador().getId())) 
-            {
+            if (participacion.getJugador().getId().equals(resultado.getGanador().getId())) {
                 participacionService.sumarPuntos(participacion,3);
             }
         }

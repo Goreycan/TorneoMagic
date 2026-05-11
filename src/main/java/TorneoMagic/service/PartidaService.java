@@ -43,8 +43,7 @@ public class PartidaService {
     // =====================================
 
     public Partida obtenerPorId(Long id) {
-        return partidaRepository.findById(id).orElseThrow(() -> new RuntimeException("Partida no encontrada")
-                );
+        return partidaRepository.findById(id).orElseThrow(() -> new RuntimeException("Partida no encontrada"));
     }
 
     // =====================================
