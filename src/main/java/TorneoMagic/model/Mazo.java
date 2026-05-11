@@ -1,22 +1,36 @@
 package TorneoMagic.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@NoArgsConstructor 
-@AllArgsConstructor 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "mazo")
 public class Mazo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_mazo") // Ajustado al MER
+    @Column(name = "id_mazo")
     private Long id;
 
     @NotBlank(message = "El nombre del mazo es obligatorio")
@@ -24,15 +38,22 @@ public class Mazo {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    //@ManyToOne (mapped = " ")
-    @JoinColumn(name = "id_jugador", nullable = false) // FK según MER
+    @Column(length = 255)
+    private String descripcion;
+
+    @Column(name = "fecha_creacion")
+    private LocalDate fechaCreacion;
+
+    @Column(length = 50)
+    private String estado;
+
+    @ManyToOne
+    @JoinColumn(name = "id_jugador", nullable = false)
     private Jugador jugador;
 
-    
-    //@OneToMany(mappedBy = "mazo")
-    private List<CartaMazo> cartaMazos; 
-
-
+    @OneToMany(mappedBy = "mazo")
+    @ToString.Exclude
+    private List<CartaMazo> cartaMazos;
     
 }
 

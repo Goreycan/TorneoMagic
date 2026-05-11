@@ -1,38 +1,49 @@
 package TorneoMagic.model;
 
-import java.util.List;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor 
-@AllArgsConstructor 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "jugador") 
-
+@Table(name = "jugadores")
 public class Jugador {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_jugador")//?
-    private Long id; 
+    private Integer id;
 
-    @NotBlank (message = "!crea tu nombre¡ , es obligatorio")
+    @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    
-    @OneToMany(mappedBy = "jugador") //relación para ver en qué torneos ha participado el ugador
-    private List<Participacion> participaciones;
+    @NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 3, max = 100, message = "El apellido debe tener entre 3 y 100 caracteres")
+    @Column(nullable = false, length = 100)
+    private String apellido;
+
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Debe ser un email válido")
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @OneToMany(mappedBy = "jugador")
+    @ToString.Exclude
+    private List<Participante> participantes;
+
+    @OneToMany(mappedBy = "jugador")
+    @ToString.Exclude
     private List<Mazo> mazos;
-
-
 }

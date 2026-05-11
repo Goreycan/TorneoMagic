@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +16,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "carta_mazo")
 public class CartaMazo {
@@ -26,16 +27,22 @@ public class CartaMazo {
     @Column(name = "id_carta_mazo")
     private Long id;
 
+   // @ManyToOne
+    //@JoinColumn(name = "mazo_id", nullable = false)
+    //private Mazo mazo;
+
+    //@ManyToOne
+    //@JoinColumn(name = "carta_id", nullable = false)
+    //private Carta carta;
+
+    @Column(nullable = false)
+    private Integer cantidad;
+
     @ManyToOne
-    @JoinColumn(name = "mazo_id", nullable = false)
+    @JoinColumn(name = "id_mazo", nullable = false)
     private Mazo mazo;
 
     @ManyToOne
-    @JoinColumn(name = "carta_id", nullable = false)
+    @JoinColumn(name = "id_carta", nullable = false)
     private Carta carta;
-
-    @Column(nullable = false)
-    private Integer cantidad; 
-
-
 }
