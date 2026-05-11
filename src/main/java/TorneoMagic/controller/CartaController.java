@@ -37,7 +37,7 @@ public class CartaController {
     }
 
     @PostMapping
-    public ResponseEntity<CartaDTO> agregarCarta(@RequestBody CartaDTO cartaDTO) {
+    public ResponseEntity<CartaDTO> agregarCarta(@Valid @RequestBody CartaDTO cartaDTO) {
         try {
             CartaDTO guardada = cartaService.guardarCarta(cartaDTO);
             return new ResponseEntity<>(guardada, HttpStatus.CREATED);

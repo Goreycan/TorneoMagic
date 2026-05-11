@@ -2,14 +2,12 @@ package TorneoMagic.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RondaDTO {
 
     private Long id;
-
     private Integer numeroRonda;
 }

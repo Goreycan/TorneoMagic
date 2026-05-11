@@ -27,14 +27,6 @@ public class CartaMazo {
     @Column(name = "id_carta_mazo")
     private Long id;
 
-   // @ManyToOne
-    //@JoinColumn(name = "mazo_id", nullable = false)
-    //private Mazo mazo;
-
-    //@ManyToOne
-    //@JoinColumn(name = "carta_id", nullable = false)
-    //private Carta carta;
-
     @Column(nullable = false)
     private Integer cantidad;
 
