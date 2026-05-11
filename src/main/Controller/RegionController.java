@@ -1,0 +1,56 @@
+package TorneoMagic.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import TorneoMagic.model.Region;
+import TorneoMagic.service.RegionService;
+
+@RestController
+@RequestMapping("/api/regiones")
+public class RegionController {
+    private final RegionService regionService;
+
+    public RegionController(RegionService regionService) {
+        this.regionService = regionService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Region>> listar() {
+        return ResponseEntity.ok(regionService.listar());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Region> obtenerPorId(@PathVariable Long id) {
+        Optional<Region> region = regionService.obtenerPorId(id);
+        return region.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Region> crear(@RequestBody Region region) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(regionService.crear(region));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Region> actualizar(@PathVariable Long id, @RequestBody Region region) {
+        return ResponseEntity.ok(regionService.actualizar(id, region));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        regionService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+}
