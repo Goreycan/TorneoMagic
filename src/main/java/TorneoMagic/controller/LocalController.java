@@ -39,12 +39,12 @@ public class LocalController {
     }
 
     @PostMapping
-    public ResponseEntity<LocalDTO> crear(@RequestBody LocalDTO localDTO) {
+    public ResponseEntity<LocalDTO> crear(@Valid @RequestBody LocalDTO localDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(localService.crear(localDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LocalDTO> actualizar(@PathVariable Long id, @RequestBody LocalDTO localDTO) {
+    public ResponseEntity<LocalDTO> actualizar(@Valid @PathVariable Long id, @RequestBody LocalDTO localDTO) {
         return ResponseEntity.ok(localService.actualizar(id, localDTO));
     }
 

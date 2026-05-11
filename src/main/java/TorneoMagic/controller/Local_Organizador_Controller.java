@@ -39,12 +39,12 @@ public class Local_Organizador_Controller {
     }
 
     @PostMapping
-    public ResponseEntity<Local_Organizador_DTO> crear(@RequestBody Local_Organizador_DTO local_Organizador_DTO) {
+    public ResponseEntity<Local_Organizador_DTO> crear(@Valid @RequestBody Local_Organizador_DTO local_Organizador_DTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(local_Organizador_Service.crear(local_Organizador_DTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Local_Organizador_DTO> actualizar(@PathVariable Long id, @RequestBody Local_Organizador_DTO local_Organizador_DTO) {
+    public ResponseEntity<Local_Organizador_DTO> actualizar(@Valid @PathVariable Long id, @RequestBody Local_Organizador_DTO local_Organizador_DTO) {
         return ResponseEntity.ok(local_Organizador_Service.actualizar(id, local_Organizador_DTO));
     }
 

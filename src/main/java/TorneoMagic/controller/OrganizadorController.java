@@ -39,12 +39,12 @@ public class OrganizadorController {
     }
 
     @PostMapping
-    public ResponseEntity<OrganizadorDTO> crear(@RequestBody OrganizadorDTO organizadorDTO) {
+    public ResponseEntity<OrganizadorDTO> crear(@Valid @RequestBody OrganizadorDTO organizadorDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(organizadorService.crear(organizadorDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrganizadorDTO> actualizar(@PathVariable Long id, @RequestBody OrganizadorDTO organizadorDTO) {
+    public ResponseEntity<OrganizadorDTO> actualizar(@Valid @PathVariable Long id, @RequestBody OrganizadorDTO organizadorDTO) {
         return ResponseEntity.ok(organizadorService.actualizar(id, organizadorDTO));
     }
 
