@@ -1,83 +1,123 @@
 package TorneoMagic.service;
 
+import TorneoMagic.DTO.RondaDTO;
 import TorneoMagic.model.Ronda;
 import TorneoMagic.model.Torneo;
 import TorneoMagic.repository.RondaRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class RondaService {
 
-    private final RondaRepository rondaRepository;
+    @Autowired
+    private RondaRepository rondaRepository;
 
-    public RondaService(RondaRepository rondaRepository) {
-        this.rondaRepository = rondaRepository;
+    // =====================================
+    // OBTENER TODAS
+    // =====================================
+
+    public List<RondaDTO> obtenerTodas() {
+        return rondaRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
     // =====================================
-    // CRUD BÁSICO
+    // GUARDAR
     // =====================================
-
-    public List<Ronda> listarRondas() {
-        return rondaRepository.findAll();
-    }
 
     public Ronda guardarRonda(Ronda ronda) {
         return rondaRepository.save(ronda);
     }
 
+    // =====================================
+    // OBTENER POR ID
+    // =====================================
+
     public Ronda obtenerPorId(Long id) {
-        return rondaRepository.findById(id).orElse(null);
+        return rondaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ronda no encontrada"
+                        )
+                );
     }
+
+    // =====================================
+    // ELIMINAR
+    // =====================================
 
     public void eliminarRonda(Long id) {
         rondaRepository.deleteById(id);
     }
 
     // =====================================
-    // LÓGICA DE NEGOCIO
+    // CALCULAR RONDAS
     // =====================================
 
-    // CALCULAR CANTIDAD DE RONDAS
-    public Integer calcularCantidadRondas(Integer jugadores) {
-
-        if (jugadores <= 16) {
-            return 3;
-        }
-
+    public Integer calcularCantidadRondas(
+            Integer jugadores
+        ) {
         if (jugadores <= 32) {
             return 4;
         }
-
         return 5;
     }
 
-    // CREAR RONDAS AUTOMÁTICAMENTE
+    // =====================================
+    // CREAR RONDAS
+    // =====================================
+
     public List<Ronda> crearRondas(
             Torneo torneo,
             Integer jugadores
     ) {
-
         Integer cantidadRondas =
                 calcularCantidadRondas(jugadores);
-
-        List<Ronda> rondas = new ArrayList<>();
-
-        for (int i = 1; i <= cantidadRondas; i++) {
-
+        List<Ronda> rondas =
+                new ArrayList<>();
+        for (int i = 1;
+             i <= cantidadRondas;
+             i++) {
             Ronda ronda = Ronda.builder()
                     .numeroRonda(i)
                     .torneo(torneo)
                     .build();
-
             rondas.add(
                     rondaRepository.save(ronda)
             );
         }
-
         return rondas;
+    }
+
+    // =====================================
+    // CONVERTIR DTO
+    // =====================================
+
+    private RondaDTO convertirADTO(
+            Ronda ronda
+    ) {
+        RondaDTO dto =
+                new RondaDTO();
+        dto.setId(ronda.getId());
+        dto.setNumeroRonda(
+                ronda.getNumeroRonda()
+        );
+        if (ronda.getTorneo() != null) {
+            dto.setNombreTorneo(
+                    ronda.getTorneo()
+                            .getNombre()
+            );
+        }
+        return dto;
     }
 }

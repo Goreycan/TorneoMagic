@@ -1,30 +1,35 @@
 package TorneoMagic.service;
 
+import TorneoMagic.DTO.ParticipacionDTO;
 import TorneoMagic.model.Participacion;
 import TorneoMagic.repository.ParticipacionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
+@Transactional
 public class ParticipacionService {
 
-    private final ParticipacionRepository participacionRepository;
+    @Autowired
+    private ParticipacionRepository participacionRepository;
 
-    public ParticipacionService(
-            ParticipacionRepository participacionRepository
-    ) {
-        this.participacionRepository = participacionRepository;
+    // =====================================
+    // OBTENER TODAS
+    // =====================================
+
+    public List<ParticipacionDTO> obtenerTodas() {
+        return participacionRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
     // =====================================
-    // CRUD
+    // GUARDAR
     // =====================================
-
-    public List<Participacion> listarParticipaciones() {
-        return participacionRepository.findAll();
-    }
 
     public Participacion guardarParticipacion(
             Participacion participacion
@@ -32,16 +37,29 @@ public class ParticipacionService {
         return participacionRepository.save(participacion);
     }
 
+    // =====================================
+    // OBTENER POR ID
+    // =====================================
+
     public Participacion obtenerPorId(Long id) {
-        return participacionRepository.findById(id).orElse(null);
+        return participacionRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Participación no encontrada"
+                        )
+                );
     }
+
+    // =====================================
+    // ELIMINAR
+    // =====================================
 
     public void eliminarParticipacion(Long id) {
         participacionRepository.deleteById(id);
     }
 
     // =====================================
-    // LÓGICA DE NEGOCIO
+    // SUMAR PUNTOS
     // =====================================
 
     public void sumarPuntos(
@@ -60,17 +78,47 @@ public class ParticipacionService {
         participacionRepository.save(participacion);
     }
 
-    public List<Participacion> generarRanking() {
+    // =====================================
+    // GENERAR RANKING
+    // =====================================
 
-        List<Participacion> ranking =
-                participacionRepository.findAll();
+    public List<ParticipacionDTO> generarRanking() {
+        return participacionRepository.findAll()
+                .stream()
+                .sorted(
+                        Comparator.comparing(
+                                Participacion::getPuntos
+                        ).reversed()
+                )
+                .map(this::convertirADTO)
+                .toList();
+    }
 
-        ranking.sort(
-                Comparator.comparing(
-                        Participacion::getPuntos
-                ).reversed()
+    // =====================================
+    // CONVERTIR DTO
+    // =====================================
+
+    private ParticipacionDTO convertirADTO(
+            Participacion participacion
+    ) {
+        ParticipacionDTO dto =
+                new ParticipacionDTO();
+        dto.setId(participacion.getId());
+        dto.setPuntos(
+                participacion.getPuntos()
         );
-
-        return ranking;
+        if (participacion.getJugador() != null) {
+            dto.setNombreJugador(
+                    participacion.getJugador()
+                            .getNombre()
+            );
+        }
+        if (participacion.getTorneo() != null) {
+            dto.setNombreTorneo(
+                    participacion.getTorneo()
+                            .getNombre()
+            );
+        }
+        return dto;
     }
 }
