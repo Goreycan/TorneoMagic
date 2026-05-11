@@ -1,79 +1,90 @@
 package TorneoMagic.controller;
 
-import TorneoMagic.model.Jugador;
+import TorneoMagic.DTO.PartidaDTO;
 import TorneoMagic.model.Partida;
-import TorneoMagic.model.Ronda;
 import TorneoMagic.service.PartidaService;
-import TorneoMagic.service.RondaService;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/partidas")
+@RequestMapping("/api/v1/partidas")
 public class PartidaController {
 
-    private final PartidaService partidaService;
-    private final RondaService rondaService;
-
-    public PartidaController(
-            PartidaService partidaService,
-            RondaService rondaService
-    ) {
-        this.partidaService = partidaService;
-        this.rondaService = rondaService;
-    }
-
-    // =====================================
-    // CRUD
-    // =====================================
+    @Autowired
+    private PartidaService partidaService;
 
     @GetMapping
-    public List<Partida> listarPartidas() {
-
-        return partidaService.listarPartidas();
-    }
-
-    @PostMapping
-    public Partida guardarPartida(
-            @Valid @RequestBody Partida partida
-    ) {
-
-        return partidaService.guardarPartida(partida);
-    }
-
-    // =====================================
-    // GENERAR PARTIDAS
-    // =====================================
-
-    @PostMapping("/generar/{rondaId}")
-    public List<Partida> generarPartidas(
-            @Valid
-            @PathVariable Long rondaId,
-            @RequestBody List<Jugador> jugadores
-    ) {
-
-        Ronda ronda =
-                rondaService.obtenerPorId(rondaId);
-
-        return partidaService.generarPartidas(
-                ronda,
-                jugadores
+    public ResponseEntity<List<PartidaDTO>> listarTodas() {
+        List<PartidaDTO> partidas =
+                partidaService.obtenerTodas();
+        if (partidas.isEmpty()) {
+            return new ResponseEntity<>(
+                    HttpStatus.NO_CONTENT
+            );
+        }
+        return new ResponseEntity<>(
+                partidas,
+                HttpStatus.OK
         );
     }
 
-    // =====================================
-    // FINALIZAR PARTIDA
-    // =====================================
-
-    @PutMapping("/finalizar/{id}")
-    public void finalizarPartida(
-            @Valid @PathVariable Long id
+    @GetMapping("/{id}")
+    public ResponseEntity<Partida> buscarPorId(
+            @PathVariable Long id
     ) {
+        try {
+            Partida partida =
+                    partidaService.obtenerPorId(id);
+            return new ResponseEntity<>(
+                    partida,
+                    HttpStatus.OK
+            );
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
-        Partida partida =
-                partidaService.obtenerPorId(id);
+    @PostMapping
+    public ResponseEntity<Partida> guardarPartida(
+            @Valid @RequestBody Partida partida
+    ) {
+        try {
+            Partida guardada =
+                    partidaService
+                            .guardarPartida(partida);
+            return new ResponseEntity<>(
+                    guardada,
+                    HttpStatus.CREATED
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
 
-        partidaService.finalizarPartida(partida);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarPartida(
+            @PathVariable Long id
+    ) {
+        try {
+            partidaService.eliminarPartida(id);
+            return new ResponseEntity<>(
+                    "Partida eliminada",
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Partida no encontrada",
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 }

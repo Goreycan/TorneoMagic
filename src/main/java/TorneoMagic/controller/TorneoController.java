@@ -1,65 +1,90 @@
 package TorneoMagic.controller;
 
+import TorneoMagic.DTO.TorneoDTO;
 import TorneoMagic.model.Torneo;
 import TorneoMagic.service.TorneoService;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/torneos")
+@RequestMapping("/api/v1/torneos")
 public class TorneoController {
 
-    private final TorneoService torneoService;
-
-    public TorneoController(
-            TorneoService torneoService
-    ) {
-        this.torneoService = torneoService;
-    }
-
-    // =====================================
-    // CRUD
-    // =====================================
+    @Autowired
+    private TorneoService torneoService;
 
     @GetMapping
-    public List<Torneo> listarTorneos() {
-        return torneoService.listarTorneos();
-    }
+    public ResponseEntity<List<TorneoDTO>> listarTodos() {
+        List<TorneoDTO> torneos =
+                torneoService.obtenerTodos();
+        if (torneos.isEmpty()) {
+            return new ResponseEntity<>(
+                    HttpStatus.NO_CONTENT
+            );
+        }
 
-    @PostMapping
-    public Torneo guardarTorneo(
-            @Valid @RequestBody Torneo torneo
-    ) {
-        return torneoService.guardarTorneo(torneo);
+        return new ResponseEntity<>(
+                torneos,
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{id}")
-    public Torneo obtenerPorId(
+    public ResponseEntity<Torneo> buscarPorId(
             @PathVariable Long id
     ) {
-        return torneoService.obtenerPorId(id);
+        try {
+            Torneo torneo =
+                    torneoService.obtenerPorId(id);
+            return new ResponseEntity<>(
+                    torneo,
+                    HttpStatus.OK
+            );
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Torneo> guardarTorneo(
+            @Valid @RequestBody Torneo torneo
+    ) {
+        try {
+            Torneo guardado =
+                    torneoService.guardarTorneo(torneo);
+            return new ResponseEntity<>(
+                    guardado,
+                    HttpStatus.CREATED
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarTorneo(
+    public ResponseEntity<String> eliminarTorneo(
             @PathVariable Long id
     ) {
-        torneoService.eliminarTorneo(id);
-    }
-
-    // =====================================
-    // LÓGICA NEGOCIO
-    // =====================================
-
-    @PutMapping("/finalizar/{id}")
-    public void finalizarTorneo(
-            @Valid @PathVariable Long id
-    ) {
-
-        Torneo torneo =
-                torneoService.obtenerPorId(id);
-
-        torneoService.finalizarTorneo(torneo);
+        try {
+            torneoService.eliminarTorneo(id);
+            return new ResponseEntity<>(
+                    "Torneo eliminado",
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Torneo no encontrado",
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 }

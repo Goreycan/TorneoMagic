@@ -1,63 +1,89 @@
 package TorneoMagic.controller;
 
+import TorneoMagic.DTO.RondaDTO;
 import TorneoMagic.model.Ronda;
-import TorneoMagic.model.Torneo;
 import TorneoMagic.service.RondaService;
-import TorneoMagic.service.TorneoService;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/rondas")
+@RequestMapping("/api/v1/rondas")
 public class RondaController {
 
-    private final RondaService rondaService;
-    private final TorneoService torneoService;
-
-    public RondaController(
-            RondaService rondaService,
-            TorneoService torneoService
-    ) {
-        this.rondaService = rondaService;
-        this.torneoService = torneoService;
-    }
-
-    // =====================================
-    // CRUD
-    // =====================================
+    @Autowired
+    private RondaService rondaService;
 
     @GetMapping
-    public List<Ronda> listarRondas() {
+    public ResponseEntity<List<RondaDTO>> listarTodas() {
+        List<RondaDTO> rondas =
+                rondaService.obtenerTodas();
+        if (rondas.isEmpty()) {
+            return new ResponseEntity<>(
+                    HttpStatus.NO_CONTENT
+            );
+        }
+        return new ResponseEntity<>(
+                rondas,
+                HttpStatus.OK
+        );
+    }
 
-        return rondaService.listarRondas();
+    @GetMapping("/{id}")
+    public ResponseEntity<Ronda> buscarPorId(
+            @PathVariable Long id
+    ) {
+        try {
+            Ronda ronda =
+                    rondaService.obtenerPorId(id);
+            return new ResponseEntity<>(
+                    ronda,
+                    HttpStatus.OK
+            );
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     @PostMapping
-    public Ronda guardarRonda(
+    public ResponseEntity<Ronda> guardarRonda(
             @Valid @RequestBody Ronda ronda
     ) {
-
-        return rondaService.guardarRonda(ronda);
+        try {
+            Ronda guardada =
+                    rondaService.guardarRonda(ronda);
+            return new ResponseEntity<>(
+                    guardada,
+                    HttpStatus.CREATED
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
-    // =====================================
-    // GENERAR RONDAS
-    // =====================================
-
-    @PostMapping("/generar")
-    public List<Ronda> generarRondas(
-            @Valid
-            @RequestParam Long torneoId,
-            @RequestParam Integer jugadores
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarRonda(
+            @PathVariable Long id
     ) {
-
-        Torneo torneo =
-                torneoService.obtenerPorId(torneoId);
-
-        return rondaService.crearRondas(
-                torneo,
-                jugadores
-        );
+        try {
+            rondaService.eliminarRonda(id);
+            return new ResponseEntity<>(
+                    "Ronda eliminada",
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Ronda no encontrada",
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 }

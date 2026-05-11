@@ -1,69 +1,106 @@
 package TorneoMagic.controller;
 
+import TorneoMagic.DTO.ParticipacionDTO;
 import TorneoMagic.model.Participacion;
 import TorneoMagic.service.ParticipacionService;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/participaciones")
+@RequestMapping("/api/v1/participaciones")
 public class ParticipacionController {
 
-    private final ParticipacionService participacionService;
-
-    public ParticipacionController(
-            ParticipacionService participacionService
-    ) {
-        this.participacionService = participacionService;
-    }
-
-    // =====================================
-    // CRUD
-    // =====================================
+    @Autowired
+    private ParticipacionService participacionService;
 
     @GetMapping
-    public List<Participacion> listarParticipaciones() {
-
-        return participacionService
-                .listarParticipaciones();
-    }
-
-    @PostMapping
-    public Participacion guardarParticipacion(
-            @Valid @RequestBody Participacion participacion
-    ) {
-
-        return participacionService
-                .guardarParticipacion(participacion);
+    public ResponseEntity<List<ParticipacionDTO>> listarTodas() {
+        List<ParticipacionDTO> participaciones =
+                participacionService.obtenerTodas();
+        if (participaciones.isEmpty()) {
+            return new ResponseEntity<>(
+                    HttpStatus.NO_CONTENT
+            );
+        }
+        return new ResponseEntity<>(
+                participaciones,
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{id}")
-    public Participacion obtenerPorId(
+    public ResponseEntity<Participacion> buscarPorId(
             @PathVariable Long id
     ) {
+        try {
+            Participacion participacion =
+                    participacionService.obtenerPorId(id);
+            return new ResponseEntity<>(
+                    participacion,
+                    HttpStatus.OK
+            );
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
-        return participacionService
-                .obtenerPorId(id);
+    @PostMapping
+    public ResponseEntity<Participacion> guardarParticipacion(
+            @Valid @RequestBody Participacion participacion
+    ) {
+        try {
+            Participacion guardada =
+                    participacionService
+                            .guardarParticipacion(
+                                    participacion
+                            );
+            return new ResponseEntity<>(
+                    guardada,
+                    HttpStatus.CREATED
+            );
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarParticipacion(
+    public ResponseEntity<String> eliminarParticipacion(
             @PathVariable Long id
     ) {
-
-        participacionService
-                .eliminarParticipacion(id);
+        try {
+            participacionService
+                    .eliminarParticipacion(id);
+            return new ResponseEntity<>(
+                    "Participación eliminada",
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Participación no encontrada",
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 
-    // =====================================
-    // RANKING
-    // =====================================
-
     @GetMapping("/ranking")
-    public List<Participacion> ranking() {
-
-        return participacionService
-                .generarRanking();
+    public ResponseEntity<List<ParticipacionDTO>>
+    ranking() {
+        List<ParticipacionDTO> ranking =
+                participacionService
+                        .generarRanking();
+        return new ResponseEntity<>(
+                ranking,
+                HttpStatus.OK
+        );
     }
 }
