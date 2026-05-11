@@ -32,6 +32,10 @@ public class Torneo {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
+    @NotBlank(message = "El estado es obligatorio")
+    private String estado; 
+    // ACTIVO, FINALIZADO, CANCELADO
+
     @NotBlank(message = "La ubicación es obligatoria")
     private String ubicacion;
 

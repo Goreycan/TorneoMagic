@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import TorneoMagic.DTO.JugadorDTO;
+import TorneoMagic.dto.JugadorDTO;
 import TorneoMagic.model.Jugador;
 import TorneoMagic.model.Mazo;
 import TorneoMagic.repository.JugadorRepository;

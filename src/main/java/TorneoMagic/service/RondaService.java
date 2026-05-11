@@ -1,6 +1,6 @@
 package TorneoMagic.service;
 
-import TorneoMagic.DTO.RondaDTO;
+import TorneoMagic.dto.RondaDTO;
 import TorneoMagic.model.Ronda;
 import TorneoMagic.model.Torneo;
 import TorneoMagic.repository.RondaRepository;

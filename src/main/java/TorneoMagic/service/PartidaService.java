@@ -1,6 +1,6 @@
 package TorneoMagic.service;
 
-import TorneoMagic.DTO.PartidaDTO;
+import TorneoMagic.dto.PartidaDTO;
 import TorneoMagic.model.Jugador;
 import TorneoMagic.model.Partida;
 import TorneoMagic.model.Ronda;

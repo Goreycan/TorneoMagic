@@ -41,7 +41,7 @@ public class Jugador {
 
     @OneToMany(mappedBy = "jugador")
     @ToString.Exclude
-    private List<Participante> participantes;
+    private List<Participacion> participaciones;
 
     @OneToMany(mappedBy = "jugador")
     @ToString.Exclude

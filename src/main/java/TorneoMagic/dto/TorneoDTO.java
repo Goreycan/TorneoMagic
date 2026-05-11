@@ -1,5 +1,6 @@
 package TorneoMagic.dto;
 
+import TorneoMagic.model.Local;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ public class TorneoDTO {
     private String nombre;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
+    private String estado;
     private String ubicacion;
-    private Local local;
+    private Long localId;
 }

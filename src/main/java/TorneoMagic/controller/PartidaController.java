@@ -1,6 +1,6 @@
 package TorneoMagic.controller;
 
-import TorneoMagic.DTO.PartidaDTO;
+import TorneoMagic.dto.PartidaDTO;
 import TorneoMagic.model.Partida;
 import TorneoMagic.service.PartidaService;
 import jakarta.validation.Valid;

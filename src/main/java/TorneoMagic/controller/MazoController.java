@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import TorneoMagic.DTO.MazoDTO;
+import jakarta.validation.Valid;
+import TorneoMagic.dto.MazoDTO;
 import TorneoMagic.model.Mazo;
 import TorneoMagic.service.MazoService;
 

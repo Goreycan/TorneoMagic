@@ -1,4 +1,4 @@
-package TorneoMagic.DTO;
+package TorneoMagic.dto;
 
 
 import java.util.List;

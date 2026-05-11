@@ -4,7 +4,7 @@ package TorneoMagic.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import TorneoMagic.DTO.CartaDTO;
+import TorneoMagic.dto.CartaDTO;
 import TorneoMagic.model.Carta;
 import TorneoMagic.repository.CartaRepository;
 

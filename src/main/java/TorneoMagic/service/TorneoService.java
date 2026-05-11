@@ -1,11 +1,13 @@
 package TorneoMagic.service;
 
-import TorneoMagic.DTO.TorneoDTO;
+import TorneoMagic.dto.TorneoDTO;
 import TorneoMagic.model.Torneo;
 import TorneoMagic.repository.TorneoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,7 +22,10 @@ public class TorneoService {
     // =====================================
 
     public List<TorneoDTO> obtenerTodos() {
-        return torneoRepository.findAll().stream().map(this::convertirADTO).toList();
+        return torneoRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
     // =====================================
@@ -36,7 +41,8 @@ public class TorneoService {
     // =====================================
 
     public Torneo obtenerPorId(Long id) {
-        return torneoRepository.findById(id).orElseThrow(() -> new RuntimeException("Torneo no encontrado"));
+        return torneoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Torneo no encontrado"));
     }
 
     // =====================================
@@ -52,7 +58,7 @@ public class TorneoService {
     // =====================================
 
     public boolean torneoActivo(Torneo torneo) {
-        return torneo.getEstado().equalsIgnoreCase("ACTIVO");
+        return "ACTIVO".equalsIgnoreCase(torneo.getEstado());
     }
 
     // =====================================
@@ -69,12 +75,14 @@ public class TorneoService {
     // =====================================
 
     private TorneoDTO convertirADTO(Torneo torneo) {
-        TorneoDTO dto = new TorneoDTO();
-        dto.setId(torneo.getId());
-        dto.setNombre(torneo.getNombre());
-        dto.setFormato(torneo.getFormato());
-        dto.setEstado(torneo.getEstado());
-        dto.setFecha(torneo.getFecha());
-        return dto;
-    }
+    return TorneoDTO.builder()
+            .id(torneo.getId())
+            .nombre(torneo.getNombre())
+            .fechaInicio(torneo.getFechaInicio())
+            .fechaFin(torneo.getFechaFin())
+            .estado(torneo.getEstado())
+            .ubicacion(torneo.getUbicacion())
+            .localId(localId)
+            .build();
+}
 }

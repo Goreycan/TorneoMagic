@@ -1,6 +1,6 @@
 package TorneoMagic.service;
 
-import TorneoMagic.DTO.ParticipacionDTO;
+import TorneoMagic.dto.ParticipacionDTO;
 import TorneoMagic.model.Participacion;
 import TorneoMagic.repository.ParticipacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
