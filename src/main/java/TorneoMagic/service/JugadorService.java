@@ -1,6 +1,5 @@
 package TorneoMagic.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,10 @@ import TorneoMagic.model.Jugador;
 import TorneoMagic.model.Mazo;
 import TorneoMagic.repository.JugadorRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class JugadorService {
 
     @Autowired
@@ -20,56 +22,44 @@ public class JugadorService {
 
     public List<JugadorDTO> obtenerTodos() {
         return jugadorRepository.findAll().stream()
-                .map(this::convertirADTO)
-                .toList();
+                 .map(this::convertirADTO)
+                 .toList();
     }
 
     public JugadorDTO buscarPorId(Long id) {
         Jugador jugador = jugadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("¡El jugador no existe en los registros!"));
+            .orElseThrow(() -> new RuntimeException("¡El duelista no existe en nuestros registros!"));
         return convertirADTO(jugador);
-    }
-
-    public Jugador guardarJugador(Jugador jugador) {
-        return jugadorRepository.save(jugador);
     }
 
     public String eliminar(Long id) {
         try {
             Jugador jugador = jugadorRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("¡Imposible eliminar! El jugador con ID " + id + " no existe."));
+                    .orElseThrow(() -> new RuntimeException(" El jugador con ID " + id + " no existe."));
             jugadorRepository.delete(jugador);
-            return "El jugador '" + jugador.getNombre() + "' ha sido retirado del torneo exitosamente.";
+            return "El duelista '" + jugador.getNombre() + "' ha sido descalificado del torneo.";
         } catch (RuntimeException e) {
             return e.getMessage();
         }
     }
 
-    public Jugador actualizarJugador(Long id, Jugador jugadorActualizado) {
-        Jugador jugador = jugadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("¡El jugador no existe!"));
-        
-        if (jugadorActualizado.getNombre() != null) {
-            jugador.setNombre(jugadorActualizado.getNombre());
-        }
-        
+    public Jugador guardar(Jugador jugador) {
         return jugadorRepository.save(jugador);
     }
 
-    
     private JugadorDTO convertirADTO(Jugador jugador) {
         JugadorDTO dto = new JugadorDTO();
         dto.setId(jugador.getId());
         dto.setNombre(jugador.getNombre());
 
-        if (jugador.getMazos() != null) {
+        if (jugador.getMazos() != null && !jugador.getMazos().isEmpty()) {
             dto.setNombreMazos(jugador.getMazos().stream()
                     .map(Mazo::getNombre)
                     .toList());
         } else {
-            dto.setNombreMazos(new ArrayList<>());
+            dto.setNombreMazos(new ArrayList<>()); 
         }
-
+        
         return dto;
     }
 
