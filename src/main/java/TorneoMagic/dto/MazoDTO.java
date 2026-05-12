@@ -16,7 +16,7 @@ public class MazoDTO {
 
     private String descripcion;
 
-    private Long idJugador;
+    private Integer idJugador;
 
     private String nombreJugador;
 
