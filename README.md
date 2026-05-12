@@ -71,7 +71,7 @@ Este proyecto fue construido colaborativamente utilizando Git. Para evitar confl
 2. Commits Atómicos: Trazabilidad clara con mensajes de commit descriptivos.
 3. Merge Requests: Integración controlada a la rama main tras validación cruzada.
 
-Instrucciones de Instalacion y Ejecucion
+### Instrucciones de Instalacion y Ejecucion
 
 ### Paso 1: Descargar el proyecto
 Abra una terminal y ejecute el siguiente comando para clonar el repositorio:
