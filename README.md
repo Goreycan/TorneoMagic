@@ -1,59 +1,116 @@
-
-# Torneo Magic - Backend System (Commander Edition)
+# Torneo Magic - Backend API (Microservicios)
 
 ## Descripción del Proyecto
-Sistema integral para la gestión de torneos de *Magic: The Gathering*. La aplicación permite administrar jugadores, mazos, cartas, infraestructura (locales y organizadores) y la lógica jerárquica de un torneo (inscripciones, rondas, partidas y resultados). 
+Sistema integral y escalable para la gestión de torneos de Magic: The Gathering (Commander Edition). Esta plataforma backend permite administrar jugadores, mazos, catálogo de cartas, infraestructura (locales y organizadores) y la lógica jerárquica de un torneo (inscripciones, generación de rondas, partidas y resultados).
 
-Este proyecto aplica un **Modelo Entidad-Relación (MER) estrictamente normalizado  y sigue buenas prácticas de persistencia con Spring Data JPA.
+El proyecto fue construido como una Arquitectura orientada a Microservicios, aislando dominios de negocio y aplicando un Modelo Entidad-Relación (MER) estrictamente normalizado en Tercera Forma Normal (3FN).
 
-## Tecnologías y Estándares
-* **Lenguaje:** Java 
-* **Framework:** Spring Boot 
-* **Persistencia:** Spring Data JPA  / MySQL
-* **Arquitectura:** Patrón CSR (Model-Controller-Service-Repository) proyectado para Microservicios (con bases de datos segregadas por módulo).
+## Tecnologías, Herramientas y Estándares
+* Lenguaje: Java 17+
+* Framework Principal: Spring Boot 3.x
+* Persistencia de Datos: Spring Data JPA / Hibernate
+* Base de Datos: MySQL (Servidor Local Laragon) / Proyectado para PostgreSQL
+* Comunicación de Red: Spring Cloud OpenFeign / RestTemplate (Para llamadas entre microservicios)
+* Validaciones: Spring Boot Starter Validation (JSR 380)
+* Testing de API: Postman
+* Control de Versiones: Git & GitHub (Flujo basado en Feature Branches)
+## Estructura de Entidades (MER Normalizado en 3FN)
+Para asegurar la atomicidad y evitar la redundancia, el dominio se separó en 15 entidades, eliminando cualquier relación de "Muchos a Muchos" directa a favor de tablas intermedias.
 
- Estructura de Entidades (MER Normalizado )
-El sistema se compone de 15 entidades para evitar dependencias parciales y redundancia de datos. Se eliminaron todas las relaciones `@ManyToMany` reemplazándolas por entidades intermedias.
+### 1. Dominio de Usuarios y Cartas
+* JUGADOR: Perfil del participante (email único).
+* MAZO: Deck configurado por el jugador.
+* CARTA y TIPO: Catálogo maestro de cartas.
+* CARTA_MAZO (Intermedia): Resuelve la relación N:N, almacenando la cantidad exacta de copias de una carta en un mazo.
 
-# 1. Gestión de Jugadores y Cartas
-* `JUGADOR`: Datos del participante (con email unique).
-* `MAZO`: El deck creado por el jugador.
-* `CARTA`: Catálogo base de cartas.
-* `TIPO`: Categoría o tipo de la carta.
-* `CARTA_MAZO`: **(Entidad Intermedia)** Resuelve la relación N:N entre cartas y mazos, permitiendo agregar el atributo "cantidad".
+### 2. Dominio de Torneos y Enfrentamientos
+* TORNEO: Evento principal (fechas, reglas, cupos máximos).
+* PARTICIPACION (Intermedia): Registra a un Jugador en un Torneo, almacenando su ranking actual.
+* RONDA: Etapas clasificatorias del torneo.
+* PARTIDA: Enfrentamiento 1v1. Registra qué id_mazo utilizó cada jugador.
+* RESULTADO: Relación 1:1 con Partida. Almacena puntajes y valida al ganador.
 
-# 2. Gestión del Torneo y Juego
-* `TORNEO`: Evento principal con cupos y fechas.
-* `PARTICIPACION`: **(Entidad Intermedia)** Vincula Jugadores con Torneos, guardando el ranking y estado de inscripción.
-* `RONDA`: Fases jerárquicas dentro de un torneo.
-* `PARTIDA`: Enfrentamientos específicos. Referencia directamente los `id_mazo` que usó cada jugador.
-* `RESULTADO`: Relación 1:1 con Partida. Almacena ganadores y puntajes.
+### 3. Dominio de Infraestructura
+* LOCAL: Sede física del evento.
+* ORGANIZADOR: Usuario administrador.
+* LOCAL_ORGANIZADOR (Intermedia): Historial de organizadores por sede.
+* COMUNA y REGION: Tablas de normalización geográfica para búsquedas filtradas.
 
-# 3. Infraestructura y Ubicación
-* `LOCAL`: Sede física del evento.
-* `ORGANIZADOR`: Encargado del torneo.
-* `LOCAL_ORGANIZADOR`: **(Entidad Intermedia)** Resuelve la relación N:N entre locales y organizadores, añadiendo la fecha de asignación y cargo.
-* `COMUNA` y `REGION`: Normalización de la ubicación geográfica.
+## Patrones de Diseño y Buenas Prácticas (Código)
 
-# Reglas JPA Aplicadas en el Código
-Para garantizar el rendimiento y la integridad, se siguieron estas convenciones:
-* `@Entity` en todas las clases del modelo.
-* `@Table` utilizando nomenclatura `snake_case`.
-* `@Id` + `@GeneratedValue(strategy = GenerationType.IDENTITY)` para las claves primarias.
-* **Relaciones `@ManyToOne`**: Se utilizó `FetchType.LAZY` en todas para optimizar consultas a la base de datos.
-* Integridad referencial en todas las Foreign Keys (FKs) mediante `@JoinColumn`.
-* Columnas con `@Column(nullable = false)` para campos obligatorios.
+### 1. Manejo de Tráfico y Recursividad (El Problema de Jackson)
+Se previno el clásico error de "Bucle Infinito" (StackOverflowError) al serializar JSON mediante:
+* Relaciones Unidireccionales: Priorización de @ManyToOne con FetchType.LAZY.
+* Capa DTO (Data Transfer Object): Nunca se devuelve una @Entity al cliente. Toda entrada y salida pasa por objetos DTO (JugadorDTO, MazoDTO), protegiendo el esquema de la base de datos.
 
-#  Prevención de Loops y Recursividad Infinita
-Una de las prioridades del diseño fue evitar que Jackson genere ciclos infinitos al serializar JSON. Esto se logró mediante:
-1. **Relaciones Unidireccionales:** Solo se define el lado que contiene la FK (el lado `@ManyToOne`). Las colecciones `@OneToMany` se omiten a menos que sean estrictamente necesarias.
-2. **Uso de DTOs (Data Transfer Objects):** Las respuestas de la API nunca devuelven entidades directas. Se mapean a objetos como `JugadorDTO`, `TorneoDTO`, `PartidaDTO`, etc.
-3. Uso de `FetchType.LAZY` para evitar cargar objetos anidados innecesarios.
+### 2. Manejo Global de Excepciones
+Se implementó un @ControllerAdvice para capturar errores de ejecución y devolver respuestas HTTP profesionales y amigables.
+* 404 Not Found: Si se busca un ID que no existe (ej: NoSuchElementException).
+* 400 Bad Request: Si los datos ingresados no cumplen el contrato @Valid (ej: @NotBlank, @Email).
+* 500 Internal Server Error: Errores no controlados del servidor.
 
-# Orden de Construcción 
-El proyecto fue construido siguiendo este flujo en capas para asegurar el bajo acoplamiento:
-1. **Modelos (Entidades):** Creación de las 14 clases Java mapeando el MER normalizado.
-2. **Repositorios (JPA):** Interfaces para la persistencia.
-3. **DTOs:** Creación de los objetos de transferencia de datos.
-4. **Servicios (Lógica de Negocio):** Implementación de reglas y manejo de dependencias.
-5. **Controladores (API REST):** Exposición de los endpoints utilizando `ResponseEntity` y validaciones.
+### 3. Comunicación entre Microservicios
+Para satisfacer el aislamiento de bases de datos, los diferentes dominios se comunican mediante HTTP. 
+* Ejemplo: Si el Microservicio de Torneos necesita validar a un Jugador, realiza una petición remota (GET) al Microservicio de Usuarios utilizando un cliente HTTP y procesa la respuesta en formato JSON antes de continuar el flujo.
+
+
+## Documentación de API (Endpoints Principales)
+A continuación, ejemplos de los endpoints RESTful expuestos a través de los @RestController. (Se recomienda usar Postman para las pruebas):
+
+| Método HTTP | Endpoint Base | Descripción | Código de Éxito |
+| :--- | :--- | :--- | :--- |
+| GET | /api/v1/jugadores | Lista todos los jugadores activos | 200 OK |
+| GET | /api/v1/jugadores/{id} | Obtiene el detalle de un jugador | 200 OK |
+| POST | /api/v1/jugadores | Crea un nuevo jugador (Requiere JSON) | 201 Created |
+| PUT | /api/v1/mazos/{id} | Actualiza un mazo existente | 200 OK |
+| DELETE | /api/v1/torneos/{id} | Elimina un torneo de forma lógica | 204 No Content |
+
+## Flujo de Trabajo (Git Branching)
+Este proyecto fue construido colaborativamente utilizando Git. Para evitar conflictos, se estableció un flujo de trabajo atómico:
+1. Creación de Ramas Aisladas: Cada integrante trabajó en feature branches separadas.
+2. Commits Atómicos: Trazabilidad clara con mensajes de commit descriptivos.
+3. Merge Requests: Integración controlada a la rama main tras validación cruzada.
+
+Instrucciones de Instalacion y Ejecucion
+
+### Paso 1: Descargar el proyecto
+Abra una terminal y ejecute el siguiente comando para clonar el repositorio:
+
+bash
+git clone https://github.com/Goreycan/TorneoMagic.git
+### Paso 2: Configurar la base de datos
+Abra el archivo src/main/resources/application.properties y verifique las credenciales de conexión. La configuración por defecto para el entorno local con MySQL es:
+spring.datasource.url=jdbc:mysql://localhost:3306/db_torneo
+spring.datasource.username=root
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+### Paso 3: Construir el proyecto
+Desde la raiz del proyecto, descargue las dependencias y compile el codigo:
+mvnw.cmd clean install
+Paso 4: Arrancar el servidor
+Inicie la aplicacion Spring Boot
+mvnw.cmd spring-boot:run
+
+Si todo sale bien, vas a ver un montón de texto en la consola y al final algo como:
+
+```
+Tomcat started on port(s): 8080 (http)
+Started MsClientesApplication in 4.523 seconds
+```
+
+Eso significa que el servidor está corriendo en `http://localhost:8080`. Si abres esa dirección en el navegador no vas a ver una página bonita (porque es una API, no una web), pero ya está lista para recibir peticiones.
+
+Para probar la creacion de un jugador desde la terminal:
+
+Bash
+curl -X POST http://localhost:8080/api/v1/jugadores \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Paola",
+    "apellido": "Gomez",
+    "email": "paola@torneomagic.cl",
+    "alias": "PaoCommander"
+  }'
+
+
