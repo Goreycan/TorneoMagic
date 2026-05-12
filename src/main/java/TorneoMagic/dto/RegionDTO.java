@@ -1,6 +1,10 @@
-package TorneoMagic.DTOs;
-
-public record RegionDTO(
-    long id,
-    String nombre){
+package TorneoMagic.dto;
+import lombok.*;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RegionDTO {
+    long id;
+    String nombre;
 }

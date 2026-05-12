@@ -1,13 +1,17 @@
-package TorneoMagic.DTOs;
+package TorneoMagic.dto;
 
+import lombok.*;
 import java.time.LocalDate;
 
-public record Local_Organizador_DTO(
-    Long id,
-    Long localId,
-    Long organizadorId,
-    String cargo,
-    LocalDate fechaAsignacion,
-    Boolean estado
-){
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Local_Organizador_DTO {
+    Long id;
+    Long localId;
+    Long organizadorId;
+    String cargo;
+    LocalDate fechaAsignacion;
+    Boolean estado;
 }

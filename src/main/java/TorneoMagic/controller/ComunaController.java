@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import TorneoMagic.DTOs.ComunaDTO;
+import jakarta.validation.Valid;
+import TorneoMagic.dto.ComunaDTO;
 import TorneoMagic.service.ComunaService;
 
 @RestController
@@ -39,12 +39,12 @@ public class ComunaController {
     }
 
     @PostMapping
-    public ResponseEntity<ComunaDTO> crear(@RequestBody ComunaDTO comunaDTO) {
+    public ResponseEntity<ComunaDTO> crear(@Valid @RequestBody ComunaDTO comunaDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(comunaService.crear(comunaDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ComunaDTO> actualizar(@PathVariable Long id, @RequestBody ComunaDTO comunaDTO) {
+    public ResponseEntity<ComunaDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ComunaDTO comunaDTO) {
         return ResponseEntity.ok(comunaService.actualizar(id, comunaDTO));
     }
 

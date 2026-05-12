@@ -37,14 +37,22 @@ public class MazoController {
     }
 
     @PostMapping
-    public ResponseEntity<Mazo> crearMazo(@Valid @RequestBody Mazo mazo) {
-        try {
-            Mazo guardado = mazoService.guardar(mazo);
-            return new ResponseEntity<>(guardado, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+public ResponseEntity<MazoDTO> crearMazo(@Valid @RequestBody Mazo mazo) {
+
+    try {
+
+        Mazo guardado = mazoService.guardar(mazo);
+
+        MazoDTO dto = mazoService.buscarPorId(guardado.getId());
+
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
+
+    } catch (Exception e) {
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarMazo(@PathVariable Long id) {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.validation.Valid;
 import TorneoMagic.DTOs.LocalDTO;
 import TorneoMagic.service.LocalService;
 
@@ -44,7 +44,7 @@ public class LocalController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LocalDTO> actualizar(@Valid @PathVariable Long id, @RequestBody LocalDTO localDTO) {
+    public ResponseEntity<LocalDTO> actualizar( @PathVariable Long id, @Valid @RequestBody LocalDTO localDTO) {
         return ResponseEntity.ok(localService.actualizar(id, localDTO));
     }
 

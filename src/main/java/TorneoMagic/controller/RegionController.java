@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.validation.Valid;
 import TorneoMagic.DTOs.RegionDTO;
 import TorneoMagic.service.RegionService;
 
@@ -39,12 +39,12 @@ public class RegionController {
     }
 
     @PostMapping
-    public ResponseEntity<RegionDTO> crear(@RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionDTO> crear(@Valid @RequestBody RegionDTO regionDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(regionService.crear(regionDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RegionDTO> actualizar(@PathVariable Long id, @RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionDTO> actualizar(@PathVariable Long id,@Valid @RequestBody RegionDTO regionDTO) {
         return ResponseEntity.ok(regionService.actualizar(id, regionDTO));
     }
 

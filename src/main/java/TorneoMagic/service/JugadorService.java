@@ -48,20 +48,22 @@ public class JugadorService {
     }
 
     private JugadorDTO convertirADTO(Jugador jugador) {
-        JugadorDTO dto = new JugadorDTO();
-        dto.setId(jugador.getId());
-        dto.setNombre(jugador.getNombre());
-
-        if (jugador.getMazos() != null && !jugador.getMazos().isEmpty()) {
-            dto.setNombreMazos(jugador.getMazos().stream()
-                    .map(Mazo::getNombre)
-                    .toList());
-        } else {
-            dto.setNombreMazos(new ArrayList<>()); 
-        }
-        
-        return dto;
+    JugadorDTO dto = new JugadorDTO();
+    dto.setId(jugador.getId());
+    dto.setNombre(jugador.getNombre());
+    dto.setApellido(jugador.getApellido());
+    dto.setEmail(jugador.getEmail());
+    if (jugador.getMazos() != null && !jugador.getMazos().isEmpty()) {
+        dto.setNombreMazos(
+            jugador.getMazos()
+                .stream()
+                .map(Mazo::getNombre)
+                .toList());
+    } else {
+        dto.setNombreMazos(new ArrayList<>());
     }
+    return dto;
+}
     //prueba
 
     

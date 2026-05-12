@@ -52,15 +52,35 @@ public class MazoService {
     }
 
     private MazoDTO convertirADTO(Mazo mazo) {
+
     MazoDTO dto = new MazoDTO();
+
     dto.setId(mazo.getId());
     dto.setNombre(mazo.getNombre());
     dto.setDescripcion(mazo.getDescripcion());
+
     if (mazo.getJugador() != null) {
+
+        dto.setIdJugador(mazo.getJugador().getId());
         dto.setNombreJugador(mazo.getJugador().getNombre());
+
     } else {
+
         dto.setNombreJugador("busca dueño");
+
     }
+
+    if (mazo.getCartaMazos() != null) {
+
+        dto.setNombresCartas(
+            mazo.getCartaMazos()
+                .stream()
+                .map(cm -> cm.getCarta().getNombre())
+                .toList()
+        );
+
+    }
+
     return dto;
 }
 

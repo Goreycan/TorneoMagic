@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import TorneoMagic.DTOs.RegionDTO;
+import TorneoMagic.dto.RegionDTO;
 import TorneoMagic.model.Region;
 import TorneoMagic.repository.RegionRepository;
 import jakarta.transaction.Transactional;

@@ -4,6 +4,9 @@ import java.util.List;
 import lombok.Data;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MazoDTO {
     private Long id;
     private String nombre;

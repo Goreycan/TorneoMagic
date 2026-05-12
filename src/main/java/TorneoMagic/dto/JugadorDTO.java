@@ -6,6 +6,9 @@ import java.util.List;
 import lombok.Data;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JugadorDTO {
     private Integer id;
     private String nombre;

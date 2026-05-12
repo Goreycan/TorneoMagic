@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.validation.Valid;
 import TorneoMagic.DTOs.OrganizadorDTO;
 import TorneoMagic.service.OrganizadorService;
 
@@ -44,7 +44,7 @@ public class OrganizadorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrganizadorDTO> actualizar(@Valid @PathVariable Long id, @RequestBody OrganizadorDTO organizadorDTO) {
+    public ResponseEntity<OrganizadorDTO> actualizar(@PathVariable Long id,@Valid @RequestBody OrganizadorDTO organizadorDTO) {
         return ResponseEntity.ok(organizadorService.actualizar(id, organizadorDTO));
     }
 

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import TorneoMagic.DTOs.ComunaDTO;
+import TorneoMagic.dto.ComunaDTO;
 import TorneoMagic.model.Comuna;
 import TorneoMagic.model.Region;
 import TorneoMagic.repository.ComunaRepository;
