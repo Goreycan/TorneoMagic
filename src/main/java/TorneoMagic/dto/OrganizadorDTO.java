@@ -5,9 +5,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class OrganizadorDTO {
-    Long id;
-    String nombre;
-    String apellido;
-    String email;
-    String telefono;
+    private Long id;
+    private String nombre;
+    private String apellido;
+    private String email;
+    private String telefono;
 }

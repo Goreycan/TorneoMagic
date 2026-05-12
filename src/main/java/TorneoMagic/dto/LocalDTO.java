@@ -5,9 +5,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class LocalDTO{
-    Long id;
-    String nombre;
-    String direccion;
-    Integer capacidad;
-    Long comunaId;
+    
+    private Long id;
+    private String nombre;
+    private String direccion;
+    private Integer capacidad;
+    private Long comunaId;
 }

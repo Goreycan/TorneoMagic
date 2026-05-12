@@ -3,7 +3,7 @@ package TorneoMagic.dto;
 
 import java.util.List;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 @NoArgsConstructor

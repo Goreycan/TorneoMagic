@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import TorneoMagic.DTOs.OrganizadorDTO;
+import TorneoMagic.dto.OrganizadorDTO;
 import TorneoMagic.model.Organizador;
 import TorneoMagic.repository.OrganizadorRepository;
 import jakarta.transaction.Transactional;
@@ -13,61 +13,105 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class OrganizadorService {
-    
+
     private final OrganizadorRepository organizadorRepository;
 
     public OrganizadorService(OrganizadorRepository organizadorRepository) {
         this.organizadorRepository = organizadorRepository;
     }
 
+    // =====================================
+    // LISTAR
+    // =====================================
+
     public List<OrganizadorDTO> listar() {
-        return organizadorRepository.findAll().stream()
+
+        return organizadorRepository.findAll()
+                .stream()
                 .map(this::toDTO)
                 .toList();
     }
 
+    // =====================================
+    // OBTENER POR ID
+    // =====================================
+
     public Optional<OrganizadorDTO> obtenerPorId(Long id) {
-        return organizadorRepository.findById(id).map(this::toDTO);
+
+        return organizadorRepository.findById(id)
+                .map(this::toDTO);
     }
 
+    // =====================================
+    // CREAR
+    // =====================================
+
     public OrganizadorDTO crear(OrganizadorDTO organizadorDTO) {
+
         Organizador organizador = fromDTO(organizadorDTO);
+
         Organizador saved = organizadorRepository.save(organizador);
+
         return toDTO(saved);
     }
 
+    // =====================================
+    // ACTUALIZAR
+    // =====================================
+
     public OrganizadorDTO actualizar(Long id, OrganizadorDTO organizadorDTO) {
-        return organizadorRepository.findById(id).map(organizadorExistente -> {
-            organizadorExistente.setNombre(organizadorDTO.nombre());
-            organizadorExistente.setApellido(organizadorDTO.apellido());
-            organizadorExistente.setEmail(organizadorDTO.email());
-            organizadorExistente.setTelefono(organizadorDTO.telefono());
-            Organizador saved = organizadorRepository.save(organizadorExistente);
-            return toDTO(saved);
-        }).orElseThrow(() -> new RuntimeException("Organizador no encontrado"));
+
+        return organizadorRepository.findById(id)
+                .map(organizadorExistente -> {
+
+                    organizadorExistente.setNombre(organizadorDTO.getNombre());
+                    organizadorExistente.setApellido(organizadorDTO.getApellido());
+                    organizadorExistente.setEmail(organizadorDTO.getEmail());
+                    organizadorExistente.setTelefono(organizadorDTO.getTelefono());
+
+                    Organizador saved = organizadorRepository.save(organizadorExistente);
+
+                    return toDTO(saved);
+
+                }).orElseThrow(() -> new RuntimeException("Organizador no encontrado"));
     }
+
+    // =====================================
+    // ELIMINAR
+    // =====================================
 
     public void eliminar(Long id) {
         organizadorRepository.deleteById(id);
     }
 
-    // Transformer methods
+    // =====================================
+    // CONVERTIR A DTO
+    // =====================================
+
     private OrganizadorDTO toDTO(Organizador organizador) {
-        return new OrganizadorDTO(
-                organizador.getId(),
-                organizador.getNombre(),
-                organizador.getApellido(),
-                organizador.getEmail(),
-                organizador.getTelefono()
-        );
+
+        return OrganizadorDTO.builder()
+                .id(organizador.getId())
+                .nombre(organizador.getNombre())
+                .apellido(organizador.getApellido())
+                .email(organizador.getEmail())
+                .telefono(organizador.getTelefono())
+                .build();
     }
 
+    // =====================================
+    // CONVERTIR A ENTITY
+    // =====================================
+
     private Organizador fromDTO(OrganizadorDTO dto) {
+
         Organizador organizador = new Organizador();
-        organizador.setNombre(dto.nombre());
-        organizador.setApellido(dto.apellido());
-        organizador.setEmail(dto.email());
-        organizador.setTelefono(dto.telefono());
+
+        organizador.setNombre(dto.getNombre());
+        organizador.setApellido(dto.getApellido());
+        organizador.setEmail(dto.getEmail());
+        organizador.setTelefono(dto.getTelefono());
+
         return organizador;
     }
 }

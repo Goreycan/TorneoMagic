@@ -6,8 +6,8 @@ import lombok.*;
 @Builder
 public class ComunaDTO
 {
-    Long id;
-    String nombre;
-    Long regionId;
+   private Long id;
+   private String nombre;
+   private Long regionId;
 
 }

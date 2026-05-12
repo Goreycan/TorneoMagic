@@ -1,5 +1,5 @@
 package TorneoMagic.dto;
-import lombok.Data;
+import lombok.*;
 import java.util.List;
 
 @Data

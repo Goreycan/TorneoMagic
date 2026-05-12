@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Local_Organizador_DTO {
-    Long id;
-    Long localId;
-    Long organizadorId;
-    String cargo;
-    LocalDate fechaAsignacion;
-    Boolean estado;
+   private Long id;
+   private Long localId;
+   private Long organizadorId;
+   private String cargo;
+   private LocalDate fechaAsignacion;
+   private Boolean estado;
 }

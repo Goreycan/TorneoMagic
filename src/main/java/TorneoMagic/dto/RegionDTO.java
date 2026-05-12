@@ -5,6 +5,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RegionDTO {
-    long id;
-    String nombre;
+    private Long id;
+    private String nombre;
 }

@@ -1,6 +1,6 @@
 package TorneoMagic.dto;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
