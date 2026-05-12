@@ -88,7 +88,7 @@ spring.jpa.show-sql=true
 ### Paso 3: Construir el proyecto
 Desde la raiz del proyecto, descargue las dependencias y compile el codigo:
 mvnw.cmd clean install
-Paso 4: Arrancar el servidor
+### Paso 4: Arrancar el servidor
 Inicie la aplicacion Spring Boot
 mvnw.cmd spring-boot:run
 
